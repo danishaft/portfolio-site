@@ -27,6 +27,7 @@
     "three": "^0.160.1"
   },
   "devDependencies": {
+    "@types/gatsbyjs__reach-router": "^2.0.5",
     "@types/node": "^20.0.0",
     "@types/prismjs": "^1",
     "@types/react": "^18.2.0",
