@@ -1,0 +1,66 @@
+{
+  "name": "gatsby-starter-default",
+  "private": true,
+  "description": "A simple starter to get up and developing quickly with Gatsby",
+  "version": "0.1.0",
+  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "dependencies": {
+    "@mdx-js/react": "^2.0.0",
+    "gatsby": "^5.14.6",
+    "gatsby-plugin-feed": "^5.15.0",
+    "gatsby-plugin-google-gtag": "^5.15.0",
+    "gatsby-plugin-image": "^3.14.0",
+    "gatsby-plugin-manifest": "^5.14.0",
+    "gatsby-plugin-mdx": "^5.15.0",
+    "gatsby-plugin-sharp": "^5.14.0",
+    "gatsby-remark-autolink-headers": "^6.15.0",
+    "gatsby-remark-copy-linked-files": "^6.15.0",
+    "gatsby-remark-images": "^7.15.0",
+    "gatsby-remark-images-medium-zoom": "^1.7.0",
+    "gatsby-remark-prismjs": "^7.15.0",
+    "gatsby-source-filesystem": "^5.14.0",
+    "gatsby-transformer-sharp": "^5.14.0",
+    "prismjs": "^1.30.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.5.0",
+    "three": "^0.160.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/prismjs": "^1",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/three": "^0.181.0",
+    "autoprefixer": "^10.4.22",
+    "gatsby-plugin-postcss": "^6.15.0",
+    "postcss": "^8.5.6",
+    "prettier": "^2.8.8",
+    "tailwindcss": "^3",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "gatsby"
+  ],
+  "license": "0BSD",
+  "scripts": {
+    "build": "gatsby build",
+    "develop": "gatsby develop",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,css}\"",
+    "start": "gatsby develop",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean",
+    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gatsbyjs/gatsby-starter-default"
+  },
+  "bugs": {
+    "url": "https://github.com/gatsbyjs/gatsby/issues"
+  },
+  "resolutions": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
