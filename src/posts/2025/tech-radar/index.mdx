@@ -1,0 +1,253 @@
+---
+title: "How I Built a Tech Event Discovery Platform with Real-Time Scraping"
+
+summary: "A platform that caters exclusively to tech events with a clean interface and smooth experience, using real-time scraping as users search."
+
+cover: assets/01-cover.jpg
+
+date: 2025-11-23
+
+---
+
+I'm a software developer, and I've been attending tech events for over three years now. I've used platforms like Luma and Eventbrite to find events, but there's always been one problem that frustrated me. The noise.
+
+Most event listing sites list cool tech events, but they also mix in so many non-tech events that it becomes overwhelming. When I'm looking for a React workshop or an AI conference, I don't want to scroll through cooking classes and yoga sessions. I remember searching for "JavaScript meetups" and getting results for wine tasting events and fitness bootcamps mixed in. The problem was clear. I wanted a clean, focused experience that only showed tech events.
+
+At first, I just thought about it, but I didn't know how to approach building it. Then recently, I had to automate a dataset ops workflow at work. I needed to pull product details, categorize products, process and clean data, and save results. That's when I realized scraping could be useful here too. I've always loved building software solutions I wish I had. It's personal. I looked into it, decided it could be done, and I got started.
+
+The goal was straightforward. I wanted a platform that caters exclusively to tech events with a clean interface and smooth experience. Success would be searching for tech events and getting relevant results without the noise, delivered quickly. I built it in a week, focusing on real-time scraping as users search rather than pre-scraping everything. I was curious about making scraping fast and reliable on demand.
+
+## Building the Architecture
+
+The core idea is simple. Scrape tech events from platforms like Luma and Eventbrite, save them to the database, and then list them. Once events are in the database, I can filter, search, and display them without hitting the source platforms every time.
+
+From there, I built the architecture around database-first search. When someone searches for events, it checks the database first. If results exist, they're served instantly. Only when nothing's in the database does it trigger a background scraping job. Most searches are fast this way, no waiting around for scraping when the data already exists.
+
+Here's how the database-first lookup works in practice:
+
+```javascript
+// Check database first
+try {
+  const dbResults = await searchDatabase(searchQuery, filters, DEFAULT_DB_SEARCH_LIMIT)
+
+  if (dbResults.events.length > 0) {
+    return NextResponse.json({
+      success: true,
+      source: 'database',
+      events: dbResults.events,
+      total: dbResults.total,
+    })
+  }
+} catch (dbError) {
+  console.error('Database search failed:', dbError)
+}
+```
+
+For async processing, I went with BullMQ and the job queue pattern. When a search has no database results, the API creates a job and returns immediately with a job reference. A separate worker process handles the scraping in the background while the frontend maintains a connection to track job completion. This decouples the search request from the scraping operation. The user gets an immediate response, and scraping happens independently without blocking the request cycle. It's tempting to scrape synchronously, but that defeats the purpose of having a database layer in the first place. This way, you get responsiveness without sacrifice.
+
+When there are no database results, the API queues a scraping job and returns immediately:
+
+```javascript
+// Create unique job ID
+const jobId = `search-${Date.now()}-${crypto.randomBytes(4).toString('hex')}`
+
+await scrapingQueue.add('scrape-events', {
+  jobId,
+  query: searchQuery,
+  platforms: searchPlatforms,
+  city: searchCity,
+})
+
+return NextResponse.json({
+  success: true,
+  jobId,
+  status: 'running',
+})
+```
+
+To keep the database fresh, I set up daily scraping runs at 6 AM UTC using Vercel cron jobs. These runs hit all the event platforms systematically, ensuring the database stays current with new events. The cron jobs use Next.js after() to process scraping operations asynchronously, so the endpoint responds immediately while the work happens in the background. This keeps the database continuously updated without manual intervention or blocking request handlers.
+
+For scraping, I started with Apify because it's battle-tested and handles most edge cases out of the box. It works well, but it introduces recurring costs and adds a dependency I can't control directly. If the platform changes and Apify's selectors break, I'm waiting on their updates.
+
+That's when I added Puppeteer as a fallback. It's lightweight, gives me full control over selectors and timing, and with the stealth plugin, it handles anti-bot detection just fine. So now I run with both: Apify handles the heavy lifting most of the time, but if selectors fail or I need to adapt quickly, Puppeteer takes over. That dual approach gives me reliability plus flexibility. The trade-off is managing two tools instead of one, but for something as brittle as web scraping, having a fallback mechanism actually reduces risk.
+
+Here's how I configure Puppeteer with stealth mode and handle browser initialization:
+
+```javascript
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
+import { z } from "zod";
+import { prisma } from "./prisma";
+
+puppeteer.use(StealthPlugin());
+
+// user agents to rotate
+const USER_AGENTS = [
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+	"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0",
+];
+
+// Get random user agent
+function getRandomUserAgent(): string {
+	return USER_AGENTS[Math.floor(Math.random() * USER_AGENTS.length)];
+}
+
+// Create browser with stealth configuration
+async function createBrowser() {
+	// Try multiple possible paths for Chromium
+	let executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+	
+	if (!executablePath) {
+		const fs = require('fs');
+		const possiblePaths = ['/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome'];
+		for (const path of possiblePaths) {
+			try {
+				if (fs.existsSync(path)) {
+					executablePath = path;
+					break;
+				}
+			} catch {
+				continue;
+			}
+		}
+	}
+	
+	return await puppeteer.launch({
+		headless: true,
+		executablePath, // Use system Chromium in Docker
+		args: [
+			"--no-sandbox",
+			"--disable-setuid-sandbox",
+			"--disable-blink-features=AutomationControlled",
+			"--disable-features=IsolateOrigins,site-per-process",
+			"--disable-web-security",
+			"--disable-dev-shm-usage",
+			"--disable-gpu",
+			"--disable-software-rasterizer",
+			"--disable-extensions",
+			"--no-first-run",
+			"--disable-default-apps",
+			"--disable-background-networking",
+			"--single-process",
+			"--disable-zygote",
+			"--disable-crash-reporter",
+			"--disable-breakpad",
+			"--disable-background-timer-throttling",
+			"--disable-backgrounding-occluded-windows",
+			"--disable-renderer-backgrounding",
+		],
+		ignoreDefaultArgs: ["--disable-extensions"],
+	});
+}
+```
+
+The batch scraping function navigates to the page, waits for content to load, and scrolls to trigger lazy loading. This approach handles dynamic content that loads as you scroll. It's important for platforms like Eventbrite where most events are loaded on demand rather than served upfront. The scraper tries multiple selectors to find event cards, accounts for network errors with exponential backoff, and detects when it's being blocked before wasting resources.
+
+Here's how I handle navigation with retry logic for network errors:
+
+```javascript
+let retries = 3;
+let lastError: Error | null = null;
+
+while (retries > 0) {
+  try {
+    await page.goto(searchUrl, {
+      waitUntil: "domcontentloaded",
+      timeout: 60000,
+    });
+    break;
+  } catch (error: any) {
+    lastError = error;
+    retries--;
+    if (
+      error.message?.includes("ERR_NETWORK_CHANGED") ||
+      error.message?.includes("net::ERR") ||
+      error.message?.includes("Navigation timeout")
+    ) {
+      if (retries > 0) {
+        await delay(2000 * (4 - retries));
+        continue;
+      }
+    }
+    throw error;
+  }
+}
+```
+
+Once the page loads, I scroll to trigger lazy loading and extract events with multiple selector fallbacks:
+
+```javascript
+await page.evaluate(async () => {
+  await new Promise<void>((resolve) => {
+    let totalHeight = 0;
+    const distance = 100;
+    const timer = setInterval(() => {
+      const scrollHeight = document.body.scrollHeight;
+      window.scrollBy(0, distance);
+      totalHeight += distance;
+
+      if (totalHeight >= scrollHeight) {
+        clearInterval(timer);
+        resolve();
+      }
+    }, 100);
+  });
+});
+
+const selectors = [
+  'article[class*="event-card"]',
+  'div[class*="event-card"]',
+  '[data-testid="event-card"]',
+  "article.eds-event-card-content",
+];
+
+for (const selector of selectors) {
+  const elements = document.querySelectorAll(selector);
+  if (elements.length > 0) {
+    // Extract events...
+    break;
+  }
+}
+
+// Detect if we're being blocked
+const bodyText = document.body?.textContent || "";
+if (bodyText.includes("blocked") || bodyText.includes("captcha")) {
+  console.error("[PUPPETEER] Possible blocking detected");
+}
+```
+
+The Redis setup ended up being one of those decisions where two tools actually work better than one. I'm using ioredis for the BullMQ connection because job queues need persistent, reliable connections. For caching though, I switched to Upstash Redis. It's HTTP-based and built for serverless, so it plays nice with Vercel. Two clients, two purposes, and together they give me reliable job processing plus fast caching that scales.
+
+## What It Actually Does
+
+Here's how it works in practice. When you search for "React workshops in Seattle," the system checks the database first. If matching events are already saved, you get them instantly. No waiting, no scraping. Results show up immediately with all the details. Title, date, venue, price, and a link to register.
+
+![A screenshot showing events being listed from the database](./assets/demo-01.webp)
+
+Image: Event listing page with search results from database
+
+But what if you're searching for something not yet in the database. That's when the job queue kicks in. The API creates a scraping job and returns immediately with a job ID. A worker process starts scraping Luma and Eventbrite in the background while the frontend tracks the job status. Once the worker finds events, they get saved to the database and the frontend automatically updates with the results. From your perspective, you search, see a loading state, and then results appear. The page stays responsive throughout.
+
+![A gif showing live scraping in progress](./assets/demo-01.gif)
+
+GIF: Live scraping in progress with results appearing as they're found
+
+For daily updates, Vercel cron jobs run at 6 AM UTC and systematically scrape all the event platforms. Instead of a single broad search, I run multiple targeted queries per platform. "ai," "data science," "python," "reactjs," "javascript," "machine learning." This multi-query approach gives much better coverage than casting a wide net. For each city and platform combination, I deduplicate by URL to avoid saving duplicate events. When you wake up, fresh events are already there without any manual intervention.
+
+## What I Learned and What Went Wrong
+
+Anti-bot detection was the first real hurdle. Eventbrite and Luma both have systems that detect automated browsing, and my initial Puppeteer setup got blocked almost immediately. I thought the stealth plugin would be enough, but it wasn't. I had to rotate user agents, override the webdriver property, set realistic viewports, and add random delays between actions. Even then, I still hit rate limits occasionally. The bigger lesson is that anti-bot systems are constantly evolving. What works today might not work next month when they update their detection. This is why having Apify as a fallback matters. If my Puppeteer setup breaks, I can switch strategies without rewriting the whole system.
+
+Docker and Chromium compatibility turned into its own problem. When I first tried running Puppeteer in a Docker container, Chromium would crash with cryptic errors about crashpad handlers and zygote processes. I spent hours debugging before realizing I needed specific flags like --single-process and --disable-zygote for Docker environments. The executable path detection was also tricky. Different systems have Chromium in different locations, so I built fallback logic to find it automatically. This taught me that serverless deployment has its own constraints. You can't just run browser automation anywhere. You need to know your environment and adapt to it.
+
+Data quality was messier than I expected. Event titles are inconsistent, dates come in different formats, and some events have missing fields. I use Zod schemas for validation, but incomplete data still slips through. Deduplication helps, but I've seen duplicate events when the URLs are slightly different or when the same event appears on multiple platforms with different identifiers. This is the reality of aggregating data from multiple sources. There's no perfect deduplication strategy. For a personal project, it's acceptable. For production, I'd need more sophisticated data cleaning, probably a dedicated validation pipeline. The irony is that the scraping is the easy part. Making the data consistent is where the real work is.
+
+## Conclusion
+
+Tech event discovery should be simpler than it is. These Platforms have APIs, but they're not free to work with. Scraping fills the gap, but it's fragile. For now, Tech Event Vista solves my problem. I can find tech events without the noise.
+
+Building this project revealed something important. The real challenge isn't technology. We have powerful tools like Next.js, Puppeteer, BullMQ, and Redis that make something like this possible in a week. The hard part is everything else. Anti-bot systems that constantly evolve, data quality across multiple sources, and the constant maintenance that scraping demands.
+
+If you find it useful, great. The code lives on GitHub. Fork it, run it, break it, fix it. 🚀

@@ -1,0 +1,262 @@
+---
+title: "You Don't Always Need useCallback and useMemo"
+
+summary: "When memoisation actually helps, when it's counterproductive, and which modern alternatives provide better solutions in React."
+
+cover: assets/01-cover.webp
+
+date: 2025-11-04
+
+---
+
+[React Hooks](https://react.dev/reference/react) have revolutionized how we manage logic and side effects in functional components, but two hooks—[useCallback](https://react.dev/reference/react/useCallback) and [useMemo](https://react.dev/reference/react/useMemo)—are frequently misunderstood and overused in the process of obsessively trying to memoise.
+
+This article explains when memoisation actually helps, when it's counterproductive, and which modern alternatives provide better solutions.
+
+Why do we memoise in the first place? In React, more often than not, we decide to create a memoised version of a value with **useMemo** or a memoised function with **useCallback** in order to skip re-rendering a sub-tree. Now re-rendering a sub-tree is usually slow in React, so we'll prefer to skip any unnecessary re-renders. In order to optimise performance, we mostly reach out for [**React.memo**](https://react.dev/reference/react/memo) to skip re-rendering a component when its props are unchanged.
+
+Here's the catch: when we pass a function or a non-primitive value as props to this memoised component, we need to make sure they have stable references. Before React skips re-rendering a sub-tree, it first compares the props of the memoised component to ascertain if they have changed. So if our props always have unstable references, the value of optimisation is lost because then our memoised component will not get memoised at the end of the day.
+
+```jsx
+function Nah() {
+  return (
+    <MemoizedComponent
+      value={{ hello: 'world' }} // New object reference each render
+      onChange={(result) => console.log('result')} // New function reference each render
+    />
+  )
+}
+
+function Okay() {
+  const value = useMemo(() => ({ hello: 'world' }), [])
+  const onChange = useCallback((result) => console.log(result), [])
+
+  return <MemoizedComponent value={value} onChange={onChange} />
+}
+```
+
+This is just one of the reasons we try to memoise; another reason is to prevent effects from firing too often. When you pass a prop as a dependency to an effect, React does the same thing it does: it compares the dependency to ascertain if the effect needs to be re-run. In all of these, React is trying to do the same thing, which is to keep the references stable by caching them. So it's normal that useCallback and useMemo always come through for this reason.
+
+## When Memoisation Fails
+
+When memoisation isn't solving one of the two problems mentioned above, it becomes useless noise. So there are cases where striving for stability in references is important, and there are others where it's pointless. Let's see some cases where the use of **useCallback** and **useMemo** becomes redundant:
+
+### Case 1: Memoising Unmemoized Components (Zero Performance Gain)
+
+The common mistake is using **useCallback** or **useMemo** on a prop being passed to an unmemoized functional component or a React built-in component like a button.
+
+```jsx
+function Okay() {
+  const value = useMemo(() => ({ hello: 'world' }), [])
+  const onChange = useCallback((result) => console.log(result), [])
+
+  return <Component value={value} onChange={onChange} />
+}
+```
+
+Now it's important to note that the custom component and the button don't care if the props have stable references. So if your custom component is not memoised using React.memo, it really doesn't care about your referential stability. You gain no performance improvement while introducing unnecessary boilerplate.
+
+### Case 2: The Broken Dependency Chain
+
+It's rarely a good idea to add non-primitive props like objects or functions to your dependency arrays. Why? Because your component has no control over whether the parent keeps those references stable.
+
+```jsx
+function NotOkay({ onChange }) {
+  const handleChange = useCallback((e: React.ChangeEvent) => {
+    trackAnalytics('changeEvent', e)
+    onChange?.(e)
+  }, [onChange])
+
+  return <SomeMemoizedComponent onChange={handleChange} />
+}
+```
+
+This useCallback is not useful in this context, or at best, it depends on how consumers will use this component. In all likelihood, there is a call-side that just invokes an inline function:
+
+```jsx
+<NotOkay onChange={() => props.doSomething()} />
+```
+
+The parent's unstable prop reference forces the child's useCallback to invalidate its cache on every render. The only way a developer who writes this code could know that not wrapping the prop in useCallback themselves breaks some internal memoisation is if they drill down into the component to see how the props are being used.
+
+That's a horrible developer experience. 😰 The only other popular option will be to memoise everything, always reach out for useCallback and useMemo, but these aren't great practices, but rather create overhead under the hood.
+
+Now, let's examine a real-world example that demonstrates why excessive memoisation becomes problematic. Even in well-architected codebases, I've seen cascading memoisation failures like this.
+
+## A Real Life Example
+
+The [WordPress Gutenberg](https://github.com/WordPress/gutenberg) project is the block editor powering millions of WordPress sites. It went through a major cleanup of unnecessary memoisation. They removed useCallback from multiple components because the function wasn't passed to any hook or memoised component that might require a stable reference.
+
+Here's a pattern similar to what they found - a block settings component:
+
+```jsx
+function BlockSettings({ onUpdate, settings }) {
+  // Unnecessary useCallback - passed to regular component
+  const handleChange = useCallback((key, value) => {
+    onUpdate({ ...settings, [key]: value });
+  }, [settings, onUpdate]);
+
+  return (
+    <SettingsPanel>
+      <TextControl
+        onChange={(val) => handleChange('title', val)}
+      />
+      <ToggleControl
+        onChange={(val) => handleChange('visible', val)}
+      />
+    </SettingsPanel>
+  );
+}
+```
+
+Spot the problem? 🔍 The TextControl and ToggleControl aren't memoized components. They're going to re-render whenever BlockSettings re-renders anyway. The useCallback achieves absolutely nothing here.
+
+```jsx
+function BlockEditor({ block }) {
+  // Another useCallback
+  const handleUpdate = useCallback((newSettings) => {
+    updateBlock(block.id, newSettings);
+  }, [block.id]);
+
+  // This creates a new object every render!
+  const settings = {
+    title: block.title,
+    visible: block.visible,
+    layout: block.layout
+  };
+
+  return <BlockSettings settings={settings} onUpdate={handleUpdate} />;
+}
+```
+
+Let's trace the cascade:
+
+1. **settings object** - Created fresh every render (new object reference)
+2. **handleChange in BlockSettings** - Depends on settings, so recreated every render despite useCallback
+3. **handleUpdate in BlockEditor** - Only stable if block.id doesn't change, but...
+4. **settings breaks the chain** - The moment settings is a new object, everything downstream fails
+
+Even though we have two useCallbacks, both are completely useless at this point because settings isn't memoised.
+
+The WordPress Gutenberg team's solution? They removed the unnecessary useCallbacks entirely. The code became simpler and more maintainable, with zero performance impact because the memoisation was never working anyway.
+
+This same pattern appears everywhere in React codebases - well-intentioned useCallbacks that achieve nothing because somewhere in the dependency chain, a new object or array is created. Let's take a look at better ways to handle this.
+
+## Escaping the Dependency Trap
+
+The immediate goal is to stabilise an effect dependency and avoid breaking memoizations in our code; there are currently far better ways than always reaching for manual useCallback and useMemo. These methods will allow you to access the latest state/props inside an effect without forcing the effect to re-run.
+
+### The Ref Pattern 🎯
+
+This pattern is pretty straightforward; it aims to solve our problem of using unstable references and causing the effect to re-run unnecessarily. What we do here is store the value we want to access in a ref, and update it on every render, that's it:
+
+```jsx
+function useDragHandlers(draggableId: string, callbacks: DragCallbacks) {
+  // Store callbacks in a ref
+  const callbacksRef = useRef(callbacks);
+
+  // Update ref every render (cheap operation)
+  useEffect(() => {
+    callbacksRef.current = callbacks;
+  });
+
+  // Handlers never change, but always use the latest callbacks
+  const onDragStart = useCallback((event) => {
+    callbacksRef.current.onStart?.(draggableId, event);
+  }, [draggableId]); // Only draggableId in dependencies!
+
+  const onDragEnd = useCallback((event) => {
+    callbacksRef.current.onEnd?.(draggableId, event);
+  }, [draggableId]);
+
+  useEffect(() => {
+    const element = document.getElementById(draggableId);
+    element?.addEventListener('mousedown', onDragStart);
+    element?.addEventListener('mouseup', onDragEnd);
+
+    return () => {
+      element?.removeEventListener('mousedown', onDragStart);
+      element?.removeEventListener('mouseup', onDragEnd);
+    };
+  }, [draggableId, onDragStart, onDragEnd]); // These never change now
+
+  return { onDragStart, onDragEnd };
+}
+
+// Now consumers don't need ANY memoisation
+function DraggableCard({ id, onDragStart, onDragEnd }) {
+  // Just pass callbacks directly - no useMemo needed!
+  const handlers = useDragHandlers(id, {
+    onStart: onDragStart,
+    onEnd: onDragEnd
+  });
+
+  return <div {...handlers}>Drag me</div>;
+}
+```
+
+The ref always points to the latest callbacks, the handlers never change, you've got stable dependencies!, and we've eliminated the entire fragile memoisation chain.
+
+Many popular component libraries use this pattern to avoid forcing consumers to memoise their callbacks. For example, [Headless UI](https://headlessui.com/) (by Tailwind Labs) and [Radix UI](https://www.radix-ui.com/) both store callback refs internally to ensure components work correctly regardless of whether users memoise their props. Imagine if these libraries required consumers to memoise their options manually, it would be a terrible developer experience.
+
+### useEffectEvent 🆕
+
+React 19.2 recently introduced [useEffectEvent](https://react.dev/reference/react/experimental_useEffectEvent), a hook that helps you separate non-reactive logic from effects, avoiding **stale closures** and unnecessary effect re-runs. In short, it's used when you need imperative access to the latest value of something during a reactive effect without explicitly forcing the effect to re-run. This is now the recommended solution for the pattern described above.
+
+Here's how you can refactor with useEffectEvent:
+
+```jsx
+function useDragHandlers(draggableId: string, callbacks: DragCallbacks) {
+  // useEffectEvent handles callbacks that "aren't reactive"
+  const handleDragStart = useEffectEvent((event) => {
+    callbacks.onStart?.(draggableId, event);
+  });
+
+  const handleDragEnd = useEffectEvent((event) => {
+    callbacks.onEnd?.(draggableId, event);
+  });
+
+  useEffect(() => {
+    const element = document.getElementById(draggableId);
+    element?.addEventListener('mousedown', handleDragStart);
+    element?.addEventListener('mouseup', handleDragEnd);
+
+    return () => {
+      element?.removeEventListener('mousedown', handleDragStart);
+      element?.removeEventListener('mouseup', handleDragEnd);
+    };
+  }, [draggableId]); // Only draggableId needed!
+
+  return { onDragStart: handleDragStart, onDragEnd: handleDragEnd };
+}
+```
+
+This makes handleChange non-reactive; it always "sees" the latest values of onUpdate and settings, and it's referentially stable between renders. The best of all worlds, without having to write a single useless useCallback or useMemo.
+
+**For new code on React 19.2+:** Use useEffectEvent instead of the Latest Ref pattern.
+
+**For existing codebases or older React versions:** The Latest Ref pattern remains a solid solution.
+
+### When Should You Use useCallback and useMemo? 🤔
+
+Now that you've seen the problems and solutions, here's a simple guide for evaluating the use of useCallback and useMemo in your code:
+
+1. **Is the function passed to React.memo() component?**
+   - If NO — ❌ Don't use useCallback
+   - If YES — Continue to #2
+
+2. **Have you measured that the component is slow (>16ms render)?**
+   - If NO — ❌ Don't use useCallback
+   - If YES — Continue to #3
+
+3. **Are all dependencies stable (not props or changing frequently)?**
+   - If NO — ⚠️ Use useEffectEvent or Latest Ref pattern instead
+   - If YES — ✅ useCallback is appropriate
+
+4. **Is this for a useEffect dependency?**
+   - ⚠️ Use useEffectEvent (React 19.2+) or Latest Ref pattern instead
+
+**The key principle:** Don't memoise unless you can answer "yes" to: *"Will this actually prevent something expensive from happening?"*
+
+If you're unsure, don't memoise. It's easier to add optimisation later than to debug broken memoisation chains. Remember, the best code is simple code. Three unnecessary useCallbacks or useMemo are harder to maintain than zero.
+
