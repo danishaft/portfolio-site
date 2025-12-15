@@ -1,5 +1,4 @@
 import { Project, ProjectID, Projects } from '../types/Project';
-import { GitHubStars } from '../types/GitHubStars';
 import { Link } from '../types/Link';
 import { routes } from '../constants/routes';
 
