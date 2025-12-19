@@ -54,13 +54,6 @@ const Footer = (props: FooterProps): React.ReactElement => {
       )}
 
       <Row className="mb-6">
-        <HyperLink
-          link={{ url: '/subscribe' }}
-          className="text-xs mr-5"
-          startEnhancer={<AiOutlineMail size={20} />}
-        >
-          Subscribe
-        </HyperLink>
 
         <HyperLink
           link={{ url: rssPath }}

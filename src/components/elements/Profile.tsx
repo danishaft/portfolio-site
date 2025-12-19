@@ -2,7 +2,6 @@ import React from 'react';
 
 import type { Profile as ProfileType } from '../../types/Profile';
 import Avatar from '../shared/Avatar';
-import Location from '../shared/Location';
 import H, { hLevel } from '../shared/H';
 import Tags from '../shared/Tags';
 import SocialLinks from '../shared/SocialLinks';
@@ -23,15 +22,11 @@ const Profile = (props: ProfileProps): React.ReactElement => {
     </div>
   ) : null;
 
-  const positionElement = profile?.position ? (
-    <div className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 mb-6">
-      {profile.position}
-    </div>
-  ) : null;
-
-  const locationElement = profile?.location ? (
-    <div className="mb-4 text-gray-500">
-      <Location location={profile.location} />
+  const positionAndLocationElement = (profile?.position || profile?.location) ? (
+    <div className="text-lg text-gray-800 dark:text-gray-200 mb-6 flex flex-row items-center gap-2 whitespace-nowrap">
+      {profile?.position && <span>{profile.position}</span>}
+      {profile?.position && profile?.location && <span>|</span>}
+      {profile?.location && <span>{profile.location.name}</span>}
     </div>
   ) : null;
 
@@ -69,8 +64,7 @@ const Profile = (props: ProfileProps): React.ReactElement => {
             <br />
             {profile?.lastName}
           </H>
-          {positionElement}
-          {locationElement}
+          {positionAndLocationElement}
           {tagsElement}
           <div className="mb-6 text-gray-600 dark:text-gray-400">
             <Greeting />

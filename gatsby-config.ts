@@ -193,7 +193,7 @@ const gatsbyConfig: GatsbyConfig = {
               }
             `,
             output: rssPath,
-            title: 'Trekhleb.dev RSS Feed',
+            title: 'Ejeh Daniel.dev RSS Feed',
           },
         ],
       },

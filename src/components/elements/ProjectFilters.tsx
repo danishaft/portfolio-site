@@ -62,11 +62,11 @@ const ProjectFilters = (props: ProjectFiltersProps): React.ReactElement => {
   return (
     <div>
       <Row>
-        <div className="text-sm text-gray-500 mr-1">
+        <div className="text-sm text-gray-500 dark:text-gray-400 mr-1">
           Sort by:
         </div>
         <div>
-          <select onChange={onSortChange} defaultValue={sortBy} className="text-sm">
+          <select onChange={onSortChange} defaultValue={sortBy} className="text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded px-2 py-1">
             {sorterOptions}
           </select>
         </div>
