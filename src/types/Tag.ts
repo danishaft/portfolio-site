@@ -1,3 +1,3 @@
 export type Tag = {
-  name?: string,
-};
+  name?: string
+}

@@ -1,21 +1,21 @@
-import React from 'react';
+import React from "react"
 
-import PageLayout from '../layouts/PageLayout';
-import PostsList from '../elements/PostsList';
-import { BlogPageQuery } from '../../pages/__generated__/BlogPageQuery';
-import PageHeader from '../shared/PageHeader';
-import Row from '../shared/Row';
-import Badge from '../shared/Badge';
-import SEO from '../shared/SEO';
+import PageLayout from "../layouts/PageLayout"
+import PostsList from "../elements/PostsList"
+import { BlogPageQuery } from "../../pages/__generated__/BlogPageQuery"
+import PageHeader from "../shared/PageHeader"
+import Row from "../shared/Row"
+import Badge from "../shared/Badge"
+import SEO from "../shared/SEO"
 
 type BlogScreenProps = {
-  posts: BlogPageQuery;
-};
+  posts: BlogPageQuery
+}
 
 const BlogScreen = (props: BlogScreenProps): React.ReactElement => {
-  const { posts } = props;
+  const { posts } = props
 
-  const postsNum = posts.allMdx.totalCount;
+  const postsNum = posts.allMdx.totalCount
 
   return (
     <PageLayout>
@@ -29,7 +29,7 @@ const BlogScreen = (props: BlogScreenProps): React.ReactElement => {
       </Row>
       <PostsList posts={posts} />
     </PageLayout>
-  );
-};
+  )
+}
 
-export default BlogScreen;
+export default BlogScreen

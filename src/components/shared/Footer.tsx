@@ -1,26 +1,26 @@
-import React from 'react';
-import { AiOutlineMail } from 'react-icons/ai';
-import { FiRss } from 'react-icons/fi';
+import React from "react"
+import { AiOutlineMail } from "react-icons/ai"
+import { FiRss } from "react-icons/fi"
 
-import HyperLink from './HyperLink';
-import { rssPath } from '../../constants/links';
-import Row from './Row';
-import SocialLinks from './SocialLinks';
-import { profile } from '../../data/profile';
-import { FOOTER_NAV, Route } from '../../constants/routes';
-import { Link } from '../../types/Link';
+import HyperLink from "./HyperLink"
+import { rssPath } from "../../constants/links"
+import Row from "./Row"
+import SocialLinks from "./SocialLinks"
+import { profile } from "../../data/profile"
+import { FOOTER_NAV, Route } from "../../constants/routes"
+import { Link } from "../../types/Link"
 
 type FooterProps = {
-  className?: string;
-};
+  className?: string
+}
 
 const FooterMenu = (): React.ReactElement => {
-  const links = Object.values(FOOTER_NAV)
-    .map((route: Route): React.ReactElement => {
+  const links = Object.values(FOOTER_NAV).map(
+    (route: Route): React.ReactElement => {
       // Adding a / to the end of the links so that activeClassName parameter
       // would work correctly.
-      const url = route.path === '/' ? route.path : `${route.path}/`;
-      const link: Link = { url };
+      const url = route.path === "/" ? route.path : `${route.path}/`
+      const link: Link = { url }
       return (
         <li key={route.path} className="ml-5">
           <HyperLink
@@ -31,30 +31,27 @@ const FooterMenu = (): React.ReactElement => {
             {route.name}
           </HyperLink>
         </li>
-      );
-    });
+      )
+    }
+  )
 
-  return (
-    <ul className="flex flex-row">
-      {links}
-    </ul>
-  );
-};
-
+  return <ul className="flex flex-row">{links}</ul>
+}
 
 const Footer = (props: FooterProps): React.ReactElement => {
-  const { className = '' } = props;
+  const { className = "" } = props
 
   return (
-    <footer className={`flex flex-col justify-center items-center ${className}`}>
+    <footer
+      className={`flex flex-col justify-center items-center ${className}`}
+    >
       {!!FOOTER_NAV.length && (
-      <Row className="mb-6">
-        <FooterMenu />
-      </Row>
+        <Row className="mb-6">
+          <FooterMenu />
+        </Row>
       )}
 
       <Row className="mb-6">
-
         <HyperLink
           link={{ url: rssPath }}
           className="text-xs"
@@ -76,7 +73,7 @@ const Footer = (props: FooterProps): React.ReactElement => {
         />
       </div>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

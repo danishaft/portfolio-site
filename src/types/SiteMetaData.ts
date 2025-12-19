@@ -1,1 +1,1 @@
-export type SiteMetaData = Record<string, unknown>;
+export type SiteMetaData = Record<string, unknown>

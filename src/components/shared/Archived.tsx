@@ -1,7 +1,7 @@
-import React from 'react';
-import { FiArchive } from 'react-icons/fi';
+import React from "react"
+import { FiArchive } from "react-icons/fi"
 
-import Row from './Row';
+import Row from "./Row"
 
 const Archived = (): React.ReactElement => {
   return (
@@ -13,12 +13,10 @@ const Archived = (): React.ReactElement => {
         <div className="mr-2">
           <FiArchive />
         </div>
-        <div>
-          Archived
-        </div>
+        <div>Archived</div>
       </Row>
     </div>
-  );
-};
+  )
+}
 
-export default Archived;
+export default Archived

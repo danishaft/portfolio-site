@@ -1,12 +1,10 @@
-import React from 'react';
+import React from "react"
 
-import ProjectsScreen from '../components/screens/ProjectsScreen';
-import { projects } from '../data/projects';
+import ProjectsScreen from "../components/screens/ProjectsScreen"
+import { projects } from "../data/projects"
 
 const Projects = (): React.ReactElement => {
-  return (
-    <ProjectsScreen projects={projects} />
-  );
-};
+  return <ProjectsScreen projects={projects} />
+}
 
-export default Projects;
+export default Projects

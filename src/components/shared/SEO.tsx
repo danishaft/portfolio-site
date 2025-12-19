@@ -1,5 +1,5 @@
-import React from 'react';
-import { useStaticQuery, graphql } from 'gatsby';
+import React from "react"
+import { useStaticQuery, graphql } from "gatsby"
 
 import {
   siteURL,
@@ -7,32 +7,32 @@ import {
   windowNameSeparator,
   twitterUser,
   siteImage,
-} from '../../constants/siteMeta';
+} from "../../constants/siteMeta"
 
-type TitleMode = 'prefix' | 'suffix';
+type TitleMode = "prefix" | "suffix"
 
-export const titleModePrefix: TitleMode = 'prefix';
-export const titleModeSuffix: TitleMode = 'suffix';
+export const titleModePrefix: TitleMode = "prefix"
+export const titleModeSuffix: TitleMode = "suffix"
 
 // @see: https://ogp.me/
-type ogType = 'article' | 'website' | 'profile';
+type ogType = "article" | "website" | "profile"
 
-export const ogTypeArticle: ogType = 'article';
-export const ogTypeWebsite: ogType = 'website';
-export const ogTypeProfile: ogType = 'profile';
+export const ogTypeArticle: ogType = "article"
+export const ogTypeWebsite: ogType = "website"
+export const ogTypeProfile: ogType = "profile"
 
 type SEOProps = {
-  title: string,
-  description: string,
-  image?: string,
-  twitterUsername?: string,
+  title: string
+  description: string
+  image?: string
+  twitterUsername?: string
   // No trailing slash allowed!
   // @see: https://www.gatsbyjs.com/docs/add-seo-component/
-  baseURL?: string,
-  titleMode?: TitleMode,
-  type?: ogType,
-  pathname?: string,
-};
+  baseURL?: string
+  titleMode?: TitleMode
+  type?: ogType
+  pathname?: string
+}
 
 // @see: https://www.gatsbyjs.com/docs/add-seo-component/
 const SEO = (props: SEOProps): React.ReactElement => {
@@ -47,7 +47,7 @@ const SEO = (props: SEOProps): React.ReactElement => {
         }
       }
     `
-  );
+  )
 
   const {
     title,
@@ -57,18 +57,19 @@ const SEO = (props: SEOProps): React.ReactElement => {
     titleMode = titleModePrefix,
     image = siteImage,
     type = ogTypeWebsite,
-    pathname = typeof window !== 'undefined' ? window.location.pathname : '',
-  } = props;
+    pathname = typeof window !== "undefined" ? window.location.pathname : "",
+  } = props
 
   // Use siteMetadata title if available, otherwise fall back to constant
-  const siteTitle = site.siteMetadata?.title || windowNamePrefix;
+  const siteTitle = site.siteMetadata?.title || windowNamePrefix
 
-  const extendedTitle = titleMode === titleModePrefix
-    ? `${siteTitle} ${windowNameSeparator} ${title}`
-    : `${title} ${windowNameSeparator} ${siteTitle}`;
+  const extendedTitle =
+    titleMode === titleModePrefix
+      ? `${siteTitle} ${windowNameSeparator} ${title}`
+      : `${title} ${windowNameSeparator} ${siteTitle}`
 
-  const bannerURL = `${baseURL}${image}`;
-  const pageURL = `${baseURL}${pathname}`;
+  const bannerURL = `${baseURL}${image}`
+  const pageURL = `${baseURL}${pathname}`
 
   // @see: https://ogp.me/
   return (
@@ -90,7 +91,7 @@ const SEO = (props: SEOProps): React.ReactElement => {
       <meta name="twitter:image" content={bannerURL} />
       <meta name="twitter:url" content={pageURL} />
     </>
-  );
-};
+  )
+}
 
-export default SEO;
+export default SEO

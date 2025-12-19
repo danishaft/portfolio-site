@@ -1,10 +1,10 @@
-import { Image } from './Image';
-import { DateString } from './Date';
-import { Link } from './Link';
+import { Image } from "./Image"
+import { DateString } from "./Date"
+import { Link } from "./Link"
 
 export type Achievement = {
-  title: string,
-  link?: Link,
-  image?: Image,
-  date?: DateString,
-};
+  title: string
+  link?: Link
+  image?: Image
+  date?: DateString
+}

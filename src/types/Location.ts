@@ -1,3 +1,3 @@
 export type Location = {
-  name?: string,
-};
+  name?: string
+}

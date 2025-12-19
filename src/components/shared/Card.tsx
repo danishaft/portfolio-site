@@ -1,33 +1,31 @@
-import React from 'react';
+import React from "react"
 
-type CardMode = 'row' | 'column';
+type CardMode = "row" | "column"
 
-export const cardModeRow: CardMode = 'row';
-export const cardModeColumn: CardMode = 'column';
+export const cardModeRow: CardMode = "row"
+export const cardModeColumn: CardMode = "column"
 
 type CardProps = {
-  children: React.ReactNode,
-  mode?: CardMode,
-};
+  children: React.ReactNode
+  mode?: CardMode
+}
 
 const Card = (props: CardProps): React.ReactElement | null => {
-  const { children, mode = cardModeColumn } = props;
+  const { children, mode = cardModeColumn } = props
 
   if (!children) {
-    return null;
+    return null
   }
 
-  const commonCardStyles = 'transition duration-200 ease-in-out shadow-md dark:shadow-lg rounded-md overflow-hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 flex flex-col';
+  const commonCardStyles =
+    "transition duration-200 ease-in-out shadow-md dark:shadow-lg rounded-md overflow-hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 flex flex-col"
 
-  const classes = mode === cardModeRow
-    ? `${commonCardStyles} sm:flex-row items-stretch`
-    : `${commonCardStyles}`;
+  const classes =
+    mode === cardModeRow
+      ? `${commonCardStyles} sm:flex-row items-stretch`
+      : `${commonCardStyles}`
 
-  return (
-    <div className={classes}>
-      {children}
-    </div>
-  );
-};
+  return <div className={classes}>{children}</div>
+}
 
-export default Card;
+export default Card

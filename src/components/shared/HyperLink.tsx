@@ -1,52 +1,53 @@
-import { Link } from 'gatsby';
-import React from 'react';
+import { Link } from "gatsby"
+import React from "react"
 
-import type { Link as LinkType } from '../../types/Link';
+import type { Link as LinkType } from "../../types/Link"
 
 export type HyperLinkProps = {
-  link: LinkType,
-  children: React.ReactNode,
-  className?: string,
-  activeClassName?: string,
-  separatorClassName?: string,
-  hoverClassName?: string | null | undefined,
-  startEnhancer?: React.ReactNode,
-  formatted?: boolean,
-  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void,
-};
+  link: LinkType
+  children: React.ReactNode
+  className?: string
+  activeClassName?: string
+  separatorClassName?: string
+  hoverClassName?: string | null | undefined
+  startEnhancer?: React.ReactNode
+  formatted?: boolean
+  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void
+}
 
 const HyperLink = (props: HyperLinkProps): React.ReactElement | null => {
   const {
     link,
     children,
-    className = '',
-    activeClassName = '',
-    separatorClassName = 'w-2',
+    className = "",
+    activeClassName = "",
+    separatorClassName = "w-2",
     hoverClassName = null,
     startEnhancer = null,
     formatted = true,
     /* eslint-disable-next-line @typescript-eslint/no-empty-function */
     onClick = (): void => {},
-  } = props;
+  } = props
 
   if (!link?.url) {
-    return null;
+    return null
   }
 
-  const hoverClasses = hoverClassName || 'hover:text-accent dark:hover:text-accent-light';
+  const hoverClasses =
+    hoverClassName || "hover:text-accent dark:hover:text-accent-light"
 
   const commonClasses = formatted
     ? `transition duration-200 ease-in-out flex flex-row items-center ${hoverClasses}`
-    : '';
+    : ""
 
-  const caption = link?.caption || undefined;
+  const caption = link?.caption || undefined
 
-  const isExternal = link.url.startsWith('http');
-  const isHash = link.url.startsWith('#');
+  const isExternal = link.url.startsWith("http")
+  const isHash = link.url.startsWith("#")
 
   const separator = startEnhancer ? (
     <span className={separatorClassName} />
-  ) : null;
+  ) : null
 
   const externalLink = (
     <a
@@ -59,7 +60,7 @@ const HyperLink = (props: HyperLinkProps): React.ReactElement | null => {
       {formatted && separator}
       {children}
     </a>
-  );
+  )
 
   const internalLink = (
     <Link
@@ -73,9 +74,9 @@ const HyperLink = (props: HyperLinkProps): React.ReactElement | null => {
       {formatted && separator}
       {children}
     </Link>
-  );
+  )
 
-  return isExternal || isHash ? externalLink : internalLink;
-};
+  return isExternal || isHash ? externalLink : internalLink
+}
 
-export default HyperLink;
+export default HyperLink

@@ -1,1 +1,1 @@
-export const rssPath = '/rss.xml';
+export const rssPath = "/rss.xml"

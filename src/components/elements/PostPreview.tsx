@@ -1,50 +1,51 @@
-import React from 'react';
-import { FiCalendar, FiClock } from 'react-icons/fi';
+import React from "react"
+import { FiCalendar, FiClock } from "react-icons/fi"
 
-import { BlogPageQuery_allMdx_nodes } from '../../pages/__generated__/BlogPageQuery';
-import Card, { cardModeRow } from '../shared/Card';
-import CardContent, { cardContentModeRow } from '../shared/CardContent';
-import type { Link as LinkType } from '../../types/Link';
-import CardTitle from '../shared/CardTitle';
-import FluidImage from '../shared/FluidImage';
-import CardMedia, { cardMediaModeRow } from '../shared/CardMedia';
-import Row from '../shared/Row';
-import { timeToReadFromRemark } from '../../utils/time';
+import { BlogPageQuery_allMdx_nodes } from "../../pages/__generated__/BlogPageQuery"
+import Card, { cardModeRow } from "../shared/Card"
+import CardContent, { cardContentModeRow } from "../shared/CardContent"
+import type { Link as LinkType } from "../../types/Link"
+import CardTitle from "../shared/CardTitle"
+import FluidImage from "../shared/FluidImage"
+import CardMedia, { cardMediaModeRow } from "../shared/CardMedia"
+import Row from "../shared/Row"
+import { timeToReadFromRemark } from "../../utils/time"
 
 type PostPreviewProps = {
-  post: BlogPageQuery_allMdx_nodes,
-};
+  post: BlogPageQuery_allMdx_nodes
+}
 
 const PostPreview = (props: PostPreviewProps): React.ReactElement | null => {
-  const { post } = props;
+  const { post } = props
 
   const postLink: LinkType = {
-    url: post.fields?.slug || '',
-  };
+    url: post.fields?.slug || "",
+  }
 
-  const postCover = post.frontmatter?.cover?.childImageSharp?.gatsbyImageData ? (
-    <FluidImage fluidImage={post.frontmatter?.cover?.childImageSharp?.gatsbyImageData} />
-  ) : null;
+  const postCover = post.frontmatter?.cover?.childImageSharp
+    ?.gatsbyImageData ? (
+    <FluidImage
+      fluidImage={post.frontmatter?.cover?.childImageSharp?.gatsbyImageData}
+    />
+  ) : null
 
   const postSummary = post?.frontmatter?.summary ? (
-    <div className="font-light">
-      {post?.frontmatter?.summary}
-    </div>
-  ) : null;
+    <div className="font-light">{post?.frontmatter?.summary}</div>
+  ) : null
 
   const dateElement = post?.frontmatter?.date ? (
     <Row className="mr-6">
       <FiCalendar className="mr-1" />
       {post.frontmatter.date}
     </Row>
-  ) : null;
+  ) : null
 
   const timeToRead = post?.timeToRead ? (
     <Row>
       <FiClock className="mr-1" />
       {timeToReadFromRemark(post?.timeToRead)} min to read
     </Row>
-  ) : null;
+  ) : null
 
   return (
     <Card mode={cardModeRow}>
@@ -52,9 +53,7 @@ const PostPreview = (props: PostPreviewProps): React.ReactElement | null => {
         {postCover}
       </CardMedia>
       <CardContent mode={cardContentModeRow}>
-        <CardTitle link={postLink}>
-          {post?.frontmatter?.title}
-        </CardTitle>
+        <CardTitle link={postLink}>{post?.frontmatter?.title}</CardTitle>
         <Row className="text-xs text-gray-500 mb-3">
           {dateElement}
           {timeToRead}
@@ -62,7 +61,7 @@ const PostPreview = (props: PostPreviewProps): React.ReactElement | null => {
         {postSummary}
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default PostPreview;
+export default PostPreview

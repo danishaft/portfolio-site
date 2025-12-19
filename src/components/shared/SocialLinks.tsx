@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react"
 import {
   FaLinkedin,
   FaTwitter,
@@ -9,20 +9,20 @@ import {
   FaFacebookSquare,
   FaYoutube,
   FaDev,
-} from 'react-icons/fa';
+} from "react-icons/fa"
 
-import { socialLinkTypes } from '../../types/SocialLink';
-import type { SocialLink as SocialLinkType } from '../../types/SocialLink';
-import HyperLink from './HyperLink';
-import Expander from './Expander';
+import { socialLinkTypes } from "../../types/SocialLink"
+import type { SocialLink as SocialLinkType } from "../../types/SocialLink"
+import HyperLink from "./HyperLink"
+import Expander from "./Expander"
 
 type SocialLinksProps = {
-  links: SocialLinkType[] | null | undefined,
-  expandable?: boolean,
-  forceShowingSecondaryLinks?: boolean,
-  iconClassName?: string,
-  itemClassName?: string,
-};
+  links: SocialLinkType[] | null | undefined
+  expandable?: boolean
+  forceShowingSecondaryLinks?: boolean
+  iconClassName?: string
+  itemClassName?: string
+}
 
 const linkToIcon = {
   [socialLinkTypes.twitter]: FaTwitter,
@@ -34,43 +34,39 @@ const linkToIcon = {
   [socialLinkTypes.facebook]: FaFacebookSquare,
   [socialLinkTypes.devTo]: FaDev,
   [socialLinkTypes.youTube]: FaYoutube,
-};
+}
 
 const SocialLinks = (props: SocialLinksProps): React.ReactElement | null => {
   const {
     links = [],
     expandable = true,
     forceShowingSecondaryLinks = false,
-    iconClassName = 'w-6 h-6',
-    itemClassName = 'mr-4 mb-2',
-  } = props;
+    iconClassName = "w-6 h-6",
+    itemClassName = "mr-4 mb-2",
+  } = props
 
   if (!links) {
-    return null;
+    return null
   }
 
-  const filteredLinks = links.filter((link) => !link?.hidden);
+  const filteredLinks = links.filter(link => !link?.hidden)
 
   const onRender = (socialLink: SocialLinkType): React.ReactElement => {
-    let linkIcon = null;
-    const linkType = socialLink?.type || '';
+    let linkIcon = null
+    const linkType = socialLink?.type || ""
     if (linkType in linkToIcon) {
-      const Icon = linkToIcon[linkType];
-      linkIcon = <Icon className={iconClassName} />;
+      const Icon = linkToIcon[linkType]
+      linkIcon = <Icon className={iconClassName} />
     }
-    return (
-      <HyperLink link={socialLink}>
-        {linkIcon || socialLink.url}
-      </HyperLink>
-    );
-  };
+    return <HyperLink link={socialLink}>{linkIcon || socialLink.url}</HyperLink>
+  }
 
   const toHide = (socialLink: SocialLinkType): boolean => {
     if (forceShowingSecondaryLinks) {
-      return false;
+      return false
     }
-    return typeof socialLink.secondary !== 'boolean' || socialLink.secondary;
-  };
+    return typeof socialLink.secondary !== "boolean" || socialLink.secondary
+  }
 
   return (
     <Expander
@@ -80,7 +76,7 @@ const SocialLinks = (props: SocialLinksProps): React.ReactElement | null => {
       expandable={expandable}
       itemClassName={itemClassName}
     />
-  );
-};
+  )
+}
 
-export default SocialLinks;
+export default SocialLinks

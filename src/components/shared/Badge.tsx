@@ -1,25 +1,22 @@
-import React from 'react';
+import React from "react"
 
 type BadgeProps = {
-  children: React.ReactNode,
-  className?: string,
-};
+  children: React.ReactNode
+  className?: string
+}
 
 const Badge = (props: BadgeProps): React.ReactElement | null => {
-  const { children, className = '' } = props;
+  const { children, className = "" } = props
 
   if (!children) {
-    return null;
+    return null
   }
 
-  const commonClassName = 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-1 rounded text-xs';
-  const classes = `${commonClassName} ${className}`;
+  const commonClassName =
+    "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-1 rounded text-xs"
+  const classes = `${commonClassName} ${className}`
 
-  return (
-    <div className={classes}>
-      {children}
-    </div>
-  );
-};
+  return <div className={classes}>{children}</div>
+}
 
-export default Badge;
+export default Badge

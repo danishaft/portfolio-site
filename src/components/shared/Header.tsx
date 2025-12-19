@@ -1,41 +1,43 @@
-import React from 'react';
-import { routes } from '../../constants/routes';
-import { brandName } from '../../constants/siteMeta';
-import type { Link as LinkType } from '../../types/Link';
-import HyperLink from './HyperLink';
-import { Route, TOP_NAV } from '../../constants/routes';
-import { Link } from '../../types/Link';
-import { useTheme } from './ThemeProvider';
+import React from "react"
+import { routes } from "../../constants/routes"
+import { brandName } from "../../constants/siteMeta"
+import type { Link as LinkType } from "../../types/Link"
+import HyperLink from "./HyperLink"
+import { Route, TOP_NAV } from "../../constants/routes"
+import { Link } from "../../types/Link"
+import { useTheme } from "./ThemeProvider"
 
 type ThemeToggleProps = {
-  className?: string;
-};
-
+  className?: string
+}
 
 type HeaderProps = {
-  className?: string,
-};
+  className?: string
+}
 
 const Logo = (): React.ReactElement => {
   const link: LinkType = {
     url: routes.home.path,
-  };
+  }
   return (
     <div>
-      <HyperLink link={link} className="font-extrabold text-sm tracking-widest uppercase">
+      <HyperLink
+        link={link}
+        className="font-extrabold text-sm tracking-widest uppercase"
+      >
         {brandName}
       </HyperLink>
     </div>
-  );
-};
+  )
+}
 
 const NavMenu = (): React.ReactElement => {
-  const links = Object.values(TOP_NAV)
-    .map((route: Route): React.ReactElement => {
+  const links = Object.values(TOP_NAV).map(
+    (route: Route): React.ReactElement => {
       // Adding a / to the end of the links so that activeClassName parameter
       // would work correctly.
-      const url = route.path === '/' ? route.path : `${route.path}/`;
-      const link: Link = { url };
+      const url = route.path === "/" ? route.path : `${route.path}/`
+      const link: Link = { url }
       return (
         <li key={route.path} className="ml-5">
           <HyperLink
@@ -46,27 +48,26 @@ const NavMenu = (): React.ReactElement => {
             {route.name}
           </HyperLink>
         </li>
-      );
-    });
+      )
+    }
+  )
 
-  return (
-    <ul className="flex flex-row">
-      {links}
-    </ul>
-  );
-};
+  return <ul className="flex flex-row">{links}</ul>
+}
 
-const ThemeToggle = ({ className = '' }: ThemeToggleProps): React.ReactElement => {
-  const { theme, toggleTheme } = useTheme();
+const ThemeToggle = ({
+  className = "",
+}: ThemeToggleProps): React.ReactElement => {
+  const { theme, toggleTheme } = useTheme()
 
   return (
     <button
       onClick={toggleTheme}
       className={`p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${className}`}
-      aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-      title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+      aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+      title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
     >
-      {theme === 'light' ? (
+      {theme === "light" ? (
         // Moon icon for light mode (click to go dark)
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -100,11 +101,11 @@ const ThemeToggle = ({ className = '' }: ThemeToggleProps): React.ReactElement =
         </svg>
       )}
     </button>
-  );
-};
+  )
+}
 
 const Header = (props: HeaderProps): React.ReactElement => {
-  const { className = '' } = props;
+  const { className = "" } = props
 
   return (
     <header className={`flex flex-row items-center ${className}`}>
@@ -116,7 +117,7 @@ const Header = (props: HeaderProps): React.ReactElement => {
       </nav>
       <ThemeToggle />
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

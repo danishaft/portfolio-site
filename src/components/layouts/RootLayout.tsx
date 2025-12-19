@@ -1,17 +1,15 @@
-import React from 'react';
+import React from "react"
 
 type RootLayoutProps = {
-  children: React.ReactNode,
-};
+  children: React.ReactNode
+}
 
 const RootLayout = (props: RootLayoutProps): React.ReactElement => {
-  const { children } = props;
+  const { children } = props
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
-      {children}
-    </>
-  );
-};
+    <>{children}</>
+  )
+}
 
-export default RootLayout;
+export default RootLayout

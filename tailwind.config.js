@@ -5,14 +5,13 @@ module.exports = {
     `./src/components/**/*.{js,jsx,ts,tsx}`,
     `./src/templates/**/*.{js,jsx,ts,tsx}`,
   ],
-  darkMode: 'class',
+  darkMode: "class",
   theme: {
     extend: {
       fontFamily: {
-        display: ['Space Grotesk', 'sans-serif'],
+        display: ["Space Grotesk", "sans-serif"],
       },
     },
   },
   plugins: [],
 }
-

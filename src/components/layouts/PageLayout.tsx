@@ -1,17 +1,17 @@
-import React from 'react';
-import Header from '../shared/Header';
-import Footer from '../shared/Footer';
-import ThreeBackground from '../shared/ThreeBackground';
+import React from "react"
+import Header from "../shared/Header"
+import Footer from "../shared/Footer"
+import ThreeBackground from "../shared/ThreeBackground"
 
 type PageLayoutProps = {
-  children: React.ReactNode,
-};
+  children: React.ReactNode
+}
 
 const PageLayout = (props: PageLayoutProps): React.ReactElement | null => {
-  const { children } = props;
+  const { children } = props
 
   if (!children) {
-    return null;
+    return null
   }
 
   return (
@@ -19,13 +19,11 @@ const PageLayout = (props: PageLayoutProps): React.ReactElement | null => {
       <ThreeBackground geometryType="network" accentColor="#4CC9F0" />
       <div className="max-w-screen-xl self-stretch m-auto w-full relative z-20">
         <Header className="px-6 sm:px-12 py-6" />
-        <article className="px-6 sm:px-12 py-6">
-          {children}
-        </article>
+        <article className="px-6 sm:px-12 py-6">{children}</article>
         <Footer className="px-6 sm:px-12 py-12" />
       </div>
     </main>
-  );
-};
+  )
+}
 
-export default PageLayout;
+export default PageLayout

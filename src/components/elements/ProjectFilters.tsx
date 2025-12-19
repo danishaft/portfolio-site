@@ -1,63 +1,62 @@
-import React, { ChangeEvent } from 'react';
-import Row from '../shared/Row';
+import React, { ChangeEvent } from "react"
+import Row from "../shared/Row"
 
-export type SortOption = 'startDateAsc' | 'startDateDesc' | 'starsDesc';
+export type SortOption = "startDateAsc" | "startDateDesc" | "starsDesc"
 
-export const sortByStartDateAsc: SortOption = 'startDateAsc';
-export const sortByStartDateDesc: SortOption = 'startDateDesc';
-export const sortByStarsDesc: SortOption = 'starsDesc';
+export const sortByStartDateAsc: SortOption = "startDateAsc"
+export const sortByStartDateDesc: SortOption = "startDateDesc"
+export const sortByStarsDesc: SortOption = "starsDesc"
 
 type Sorter = {
-  title: string,
-  hidden?: boolean,
+  title: string
+  hidden?: boolean
 }
 
-type Sorters = Record<SortOption, Sorter>;
+type Sorters = Record<SortOption, Sorter>
 
 const sorters: Sorters = {
   [sortByStartDateDesc]: {
-    title: '➘ start date',
+    title: "➘ start date",
   },
   [sortByStartDateAsc]: {
-    title: '➚ start date',
+    title: "➚ start date",
     hidden: true,
   },
   [sortByStarsDesc]: {
-    title: '➘ stars',
+    title: "➘ stars",
   },
-};
+}
 
-export const supportedSortOptions: SortOption[] = Object
-  .keys(sorters)
+export const supportedSortOptions: SortOption[] = Object.keys(sorters)
   // @ts-ignore
-  .filter((sortOption: SortOption) => !sorters[sortOption].hidden);
+  .filter((sortOption: SortOption) => !sorters[sortOption].hidden)
 
 type ProjectFiltersProps = {
-  sortBy: SortOption,
-  onSort: (sortKey: SortOption) => void,
-};
+  sortBy: SortOption
+  onSort: (sortKey: SortOption) => void
+}
 
 const ProjectFilters = (props: ProjectFiltersProps): React.ReactElement => {
-  const { onSort, sortBy } = props;
+  const { onSort, sortBy } = props
 
   const sorterOptions = Object.keys(sorters)
     .filter((sorterKey: string) => {
-      const sorter = sorters[sorterKey as SortOption];
-      return !sorter?.hidden;
+      const sorter = sorters[sorterKey as SortOption]
+      return !sorter?.hidden
     })
     .map((sorterKey: string) => {
-      const sorter = sorters[sorterKey as SortOption];
+      const sorter = sorters[sorterKey as SortOption]
       return (
         <option key={sorterKey} value={sorterKey}>
           {sorter.title}
         </option>
-      );
-    });
+      )
+    })
 
   const onSortChange = (event: ChangeEvent<HTMLSelectElement>): void => {
-    const selectedKey: SortOption = event.target.value as SortOption;
-    onSort(selectedKey);
-  };
+    const selectedKey: SortOption = event.target.value as SortOption
+    onSort(selectedKey)
+  }
 
   return (
     <div>
@@ -66,13 +65,17 @@ const ProjectFilters = (props: ProjectFiltersProps): React.ReactElement => {
           Sort by:
         </div>
         <div>
-          <select onChange={onSortChange} defaultValue={sortBy} className="text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded px-2 py-1">
+          <select
+            onChange={onSortChange}
+            defaultValue={sortBy}
+            className="text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded px-2 py-1"
+          >
             {sorterOptions}
           </select>
         </div>
       </Row>
     </div>
-  );
-};
+  )
+}
 
-export default ProjectFilters;
+export default ProjectFilters
