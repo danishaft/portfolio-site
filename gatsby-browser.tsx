@@ -26,3 +26,24 @@ export function wrapPageElement(
   const { props, element } = args
   return <RootLayout {...props}>{element}</RootLayout>
 }
+
+// Client-side routing for GitHub Pages
+// https://github.com/rafgraph/spa-github-pages
+export function onClientEntry(): void {
+  // Parse the query string
+  const pathSegmentsToKeep = 0
+  const l = window.location
+  const pathIsIn404Format = l.pathname.includes("/?/")
+  if (pathIsIn404Format) {
+    const pathParts = l.pathname.split("/?/")
+    const pathname = pathParts[1]
+      ? "/" + pathParts[1].split("&")[0].replace(/~and~/g, "&")
+      : l.pathname
+    const search = l.search
+      ? "?" + l.search.slice(1).replace(/~and~/g, "&")
+      : ""
+    const hash = l.hash
+    const newPath = pathname + search + hash
+    window.history.replaceState({}, "", newPath)
+  }
+}
