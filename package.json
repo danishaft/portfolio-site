@@ -54,7 +54,7 @@
     "clean": "gatsby clean",
     "lint": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md,css}\"",
     "type": "tsc --noEmit",
-    "deploy": "gatsby build && gh-pages -d public -b gh-pages",
+    "deploy": "GATSBY_PATH_PREFIX=/portfolio-site gatsby build && gh-pages -d public -b gh-pages",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
   },
   "repository": {

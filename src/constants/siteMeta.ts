@@ -1,4 +1,4 @@
-export const siteURL = "https://danishaft.github.io/trekhleb.github.io"
+export const siteURL = "https://danishaft.github.io/portfolio-site"
 export const defaultSiteTitle = "Ejeh Daniel.dev"
 export const defaultSiteDescription =
   "Personal website and project by Ejeh Daniel"
