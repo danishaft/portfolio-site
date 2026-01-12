@@ -11,7 +11,6 @@ import {
 const gatsbyConfig: GatsbyConfig = {
   siteMetadata,
   pathPrefix: process.env.GATSBY_PATH_PREFIX || "/portfolio-site",
-  assetPrefix: process.env.GATSBY_PATH_PREFIX || "/portfolio-site",
 
   flags: {
     // Use DEV_SSR to debug the SSR related issues locally (i.e. hydration related ones).
