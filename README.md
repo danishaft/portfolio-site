@@ -1,99 +1,184 @@
-<!-- AUTO-GENERATED-CONTENT:START (STARTER) -->
-<p align="center">
-  <a href="https://www.gatsbyjs.com">
-    <img alt="Gatsby" src="https://www.gatsbyjs.com/Gatsby-Monogram.svg" width="60" />
-  </a>
-</p>
-<h1 align="center">
-  Gatsby's default starter
-</h1>
+# Ejeh Daniel - Portfolio Website
 
-Kick off your project with this default boilerplate. This starter ships with the main Gatsby configuration files you might need to get up and running blazing fast with the blazing fast app generator for React.
+A modern, responsive portfolio website built with Gatsby, TypeScript, and Tailwind CSS. Features a clean design with dark mode support, technology showcase with avatars, contact form integration, and automated deployment via GitHub Actions.
 
-_Have another more specific idea? You may want to check out our vibrant collection of [official and community-created starters](https://www.gatsbyjs.com/docs/gatsby-starters/)._
+🌐 **Live Site:** [https://danishaft.github.io/portfolio-site](https://danishaft.github.io/portfolio-site)
 
-## 🚀 Quick start
+## ✨ Features
 
-1.  **Create a Gatsby site.**
+- **Modern Tech Stack**: Built with Gatsby, React, TypeScript, and Tailwind CSS
+- **Technology Showcase**: Display technologies with logos/avatars in categorized sections
+- **Contact Form**: Integrated with Formspree for easy contact management
+- **Blog/Articles**: MDX-based blog system for writing technical articles
+- **Projects Portfolio**: Showcase your projects with filtering and sorting
+- **Dark Mode**: Full dark mode support with theme switching
+- **RSS Feed**: Automatic RSS feed generation for blog posts
+- **Responsive Design**: Fully responsive and mobile-friendly
+- **CI/CD**: Automated deployment to GitHub Pages via GitHub Actions
 
-    Use the Gatsby CLI ([install instructions](https://www.gatsbyjs.com/docs/tutorial/getting-started/part-0/#gatsby-cli)) to create a new site, specifying the default starter.
+## 🚀 Quick Start
 
-    ```shell
-    # create a new Gatsby site using the default starter
-    gatsby new my-default-starter https://github.com/gatsbyjs/gatsby-starter-default
-    ```
+### Prerequisites
 
-1.  **Start developing.**
+- Node.js 18.x or higher
+- npm or yarn
 
-    Navigate into your new site’s directory and start it up.
+### Installation
 
-    ```shell
-    cd my-default-starter/
-    gatsby develop
-    ```
+1. **Clone the repository**
 
-1.  **Open the source code and start editing!**
+   ```bash
+   git clone https://github.com/danishaft/portfolio-site.git
+   cd portfolio-site
+   ```
 
-    Your site is now running at `http://localhost:8000`!
+2. **Install dependencies**
 
-    Note: You'll also see a second link: `http://localhost:8000/___graphql`. This is a tool you can use to experiment with querying your data. Learn more about using this tool in the [Gatsby Tutorial](https://www.gatsbyjs.com/docs/tutorial/getting-started/part-4/#use-graphiql-to-explore-the-data-layer-and-write-graphql-queries).
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
-    Open the `my-default-starter` directory in your code editor of choice and edit `src/pages/index.js`. Save your changes and the browser will update in real time!
+3. **Set up environment variables**
 
-## 🚀 Quick start (Netlify)
+   Create a `.env` file in the root directory:
 
-Deploy this starter with one click on [Netlify](https://app.netlify.com/signup):
+   ```bash
+   GATSBY_FORMSPREE_ENDPOINT=https://formspree.io/f/YOUR_FORM_ID
+   ```
 
-[<img src="https://www.netlify.com/img/deploy/button.svg" alt="Deploy to Netlify" />](https://app.netlify.com/start/deploy?repository=https://github.com/gatsbyjs/gatsby-starter-default)
+   Replace `YOUR_FORM_ID` with your Formspree form ID. You can get one by signing up at [formspree.io](https://formspree.io).
 
-## 🧐 What's inside?
+4. **Start development server**
 
-A quick look at the top-level files and directories you'll see in a typical Gatsby project.
+   ```bash
+   npm run develop
+   # or
+   yarn develop
+   ```
 
-    .
-    ├── node_modules
-    ├── src
-    ├── .gitignore
-    ├── gatsby-browser.js
-    ├── gatsby-config.js
-    ├── gatsby-node.js
-    ├── gatsby-ssr.js
-    ├── LICENSE
-    ├── package.json
-    └── README.md
+   Your site will be available at `http://localhost:8000`
 
-1.  **`/node_modules`**: This directory contains all of the modules of code that your project depends on (npm packages) are automatically installed.
+## 📝 Available Scripts
 
-1.  **`/src`**: This directory will contain all of the code related to what you will see on the front-end of your site (what you see in the browser) such as your site header or a page template. `src` is a convention for “source code”.
+- `npm run develop` - Start development server
+- `npm run build` - Build production site
+- `npm run serve` - Serve production build locally
+- `npm run lint` - Check code formatting with Prettier
+- `npm run format` - Format code with Prettier
+- `npm run type` - Run TypeScript type checking
+- `npm run clean` - Clean Gatsby cache
 
-1.  **`.gitignore`**: This file tells git which files it should not track / not maintain a version history for.
+## 🏗️ Project Structure
 
-1.  **`gatsby-browser.js`**: This file is where Gatsby expects to find any usage of the [Gatsby browser APIs](https://www.gatsbyjs.com/docs/reference/config-files/gatsby-browser/) (if any). These allow customization/extension of default Gatsby settings affecting the browser.
+```
+portfolio-site/
+├── src/
+│   ├── components/        # React components
+│   │   ├── elements/     # Page-specific components
+│   │   ├── layouts/       # Layout components
+│   │   ├── screens/       # Screen/page components
+│   │   └── shared/        # Reusable UI components
+│   ├── data/              # Static data (profile, projects, etc.)
+│   ├── images/            # Image assets
+│   ├── pages/             # Gatsby pages
+│   ├── posts/             # MDX blog posts
+│   ├── styles/            # Global styles
+│   ├── templates/         # Page templates
+│   ├── types/             # TypeScript type definitions
+│   └── utils/             # Utility functions
+├── .github/
+│   └── workflows/         # GitHub Actions workflows
+├── gatsby-config.ts       # Gatsby configuration
+├── tailwind.config.js     # Tailwind CSS configuration
+└── tsconfig.json          # TypeScript configuration
+```
 
-1.  **`gatsby-config.js`**: This is the main configuration file for a Gatsby site. This is where you can specify information about your site (metadata) like the site title and description, which Gatsby plugins you’d like to include, etc. (Check out the [config docs](https://www.gatsbyjs.com/docs/reference/config-files/gatsby-config/) for more detail).
+## 🔧 Configuration
 
-1.  **`gatsby-node.js`**: This file is where Gatsby expects to find any usage of the [Gatsby Node APIs](https://www.gatsbyjs.com/docs/reference/config-files/gatsby-node/) (if any). These allow customization/extension of default Gatsby settings affecting pieces of the site build process.
+### Customizing Your Portfolio
 
-1.  **`gatsby-ssr.js`**: This file is where Gatsby expects to find any usage of the [Gatsby server-side rendering APIs](https://www.gatsbyjs.com/docs/reference/config-files/gatsby-ssr/) (if any). These allow customization of default Gatsby settings affecting server-side rendering.
+1. **Profile Information**: Edit `src/data/profile.ts`
+   - Update personal information
+   - Add/remove skill categories
+   - Modify work experience
 
-1.  **`LICENSE`**: This Gatsby starter is licensed under the 0BSD license. This means that you can see this file as a placeholder and replace it with your own license.
+2. **Projects**: Edit `src/data/projects.ts`
+   - Add your projects
+   - Update project details
 
-1.  **`package.json`**: A manifest file for Node.js projects, which includes things like metadata (the project’s name, author, etc). This manifest is how npm knows which packages to install for your project.
+3. **Social Links**: Edit `src/data/socialLinks.ts`
+   - Add/remove social media links
 
-1.  **`README.md`**: A text file containing useful reference information about your project.
+4. **Site Metadata**: Edit `src/constants/siteMeta.ts`
+   - Update site title, description, and URL
 
-## 🎓 Learning Gatsby
+### Adding Technology Logos
 
-Looking for more guidance? Full documentation for Gatsby lives [on the website](https://www.gatsbyjs.com/). Here are some places to start:
+Technology logos are automatically fetched from CDN. To add custom logos:
 
-- **For most developers, we recommend starting with our [in-depth tutorial for creating a site with Gatsby](https://www.gatsbyjs.com/docs/tutorial/getting-started/).** It starts with zero assumptions about your level of ability and walks through every step of the process.
+1. Add logo images to `src/images/` directory
+2. Update the `getTechLogo` function in `src/components/shared/Tags.tsx`
+3. Or add images directly to skill entries in `src/data/profile.ts`:
 
-- **To dive straight into code samples, head [to our documentation](https://www.gatsbyjs.com/docs/).** In particular, check out the _Guides_, _API Reference_, and _Advanced Tutorials_ sections in the sidebar.
+```typescript
+{
+  name: "Your Technology",
+  image: {
+    srcPath: "path/to/logo.png",
+    caption: "Your Technology Logo"
+  }
+}
+```
 
-## 💫 Deploy
+## 🚢 Deployment
 
-[Build, Deploy, and Host On Netlify](https://netlify.com)
+### GitHub Pages (Current Setup)
 
-The fastest way to combine your favorite tools and APIs to build the fastest sites, stores, and apps for the web. And also the best place to build, deploy, and host your Gatsby sites.
+The site is automatically deployed to GitHub Pages via GitHub Actions when you push to the `main` branch.
 
-<!-- AUTO-GENERATED-CONTENT:END -->
+**Required GitHub Secrets:**
+- `GATSBY_FORMSPREE_ENDPOINT`: Your Formspree endpoint URL
+- `ACTIONS_DEPLOY_ACCESS_TOKEN`: GitHub token with repo permissions
+
+**Setup:**
+1. Go to your repository → Settings → Secrets and variables → Actions
+2. Add the required secrets
+3. Push to `main` branch - deployment happens automatically
+
+The site will be available at: `https://YOUR_USERNAME.github.io/portfolio-site`
+
+### Manual Deployment
+
+```bash
+npm run build
+npm run deploy
+```
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Gatsby](https://www.gatsbyjs.com/) v5
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Content**: [MDX](https://mdxjs.com/) for blog posts
+- **Forms**: [Formspree](https://formspree.io/)
+- **Icons**: [React Icons](https://react-icons.github.io/react-icons/)
+- **3D Background**: [Three.js](https://threejs.org/)
+
+## 📄 License
+
+This project is licensed under the 0BSD license.
+
+## 👤 Author
+
+**Ejeh Daniel**
+
+- Website: [https://danishaft.github.io/portfolio-site](https://danishaft.github.io/portfolio-site)
+- LinkedIn: [Ejeh Daniel](https://www.linkedin.com/in/ejeh-daniel-482409190/)
+- GitHub: [@danishaft](https://github.com/danishaft)
+- Twitter: [@EjehAy_Daniel](https://x.com/EjehAy_Daniel)
+
+---
+
+Built with ❤️ using Gatsby
