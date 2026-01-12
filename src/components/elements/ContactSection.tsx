@@ -9,7 +9,9 @@ const ContactSection = (): React.ReactElement => {
     message: "",
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null)
+  const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(
+    null
+  )
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -19,12 +21,13 @@ const ContactSection = (): React.ReactElement => {
     // Formspree endpoint - replace with your Formspree form ID
     // Get your form ID from https://formspree.io/forms
     // Example: https://formspree.io/f/YOUR_FORM_ID
-    const formspreeEndpoint = 
-      process.env.GATSBY_FORMSPREE_ENDPOINT || 
-      "https://formspree.io/f/mlggegjz"
+    const formspreeEndpoint =
+      process.env.GATSBY_FORMSPREE_ENDPOINT || "https://formspree.io/f/mlggegjz"
 
     if (!formspreeEndpoint) {
-      console.error("Formspree endpoint not configured. Please set GATSBY_FORMSPREE_ENDPOINT in your .env file")
+      console.error(
+        "Formspree endpoint not configured. Please set GATSBY_FORMSPREE_ENDPOINT in your .env file"
+      )
       setSubmitStatus("error")
       setIsSubmitting(false)
       return
@@ -67,7 +70,7 @@ const ContactSection = (): React.ReactElement => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setFormData(prev => ({ ...prev, [name]: value }))
   }
 
   return (
@@ -82,9 +85,10 @@ const ContactSection = (): React.ReactElement => {
         Send me a message
       </div>
       <div className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-        Fill out the form below and I&apos;ll respond back to you within 24 hours...
+        Fill out the form below and I&apos;ll respond back to you within 24
+        hours...
       </div>
-      
+
       <form onSubmit={handleSubmit} className="max-w-2xl">
         <div className="space-y-4">
           <div>
@@ -152,7 +156,8 @@ const ContactSection = (): React.ReactElement => {
 
           {submitStatus === "error" && (
             <div className="p-3 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-md text-sm">
-              Something went wrong. Please try again or reach out via social media.
+              Something went wrong. Please try again or reach out via social
+              media.
             </div>
           )}
 
@@ -172,4 +177,3 @@ const ContactSection = (): React.ReactElement => {
 }
 
 export default ContactSection
-
