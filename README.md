@@ -100,15 +100,18 @@ portfolio-site/
 ### Customizing Your Portfolio
 
 1. **Profile Information**: Edit `src/data/profile.ts`
+
    - Update personal information
    - Add/remove skill categories
    - Modify work experience
 
 2. **Projects**: Edit `src/data/projects.ts`
+
    - Add your projects
    - Update project details
 
 3. **Social Links**: Edit `src/data/socialLinks.ts`
+
    - Add/remove social media links
 
 4. **Site Metadata**: Edit `src/constants/siteMeta.ts`
@@ -139,10 +142,12 @@ Technology logos are automatically fetched from CDN. To add custom logos:
 The site is automatically deployed to GitHub Pages via GitHub Actions when you push to the `main` branch.
 
 **Required GitHub Secrets:**
+
 - `GATSBY_FORMSPREE_ENDPOINT`: Your Formspree endpoint URL
 - `ACTIONS_DEPLOY_ACCESS_TOKEN`: GitHub token with repo permissions
 
 **Setup:**
+
 1. Go to your repository → Settings → Secrets and variables → Actions
 2. Add the required secrets
 3. Push to `main` branch - deployment happens automatically
