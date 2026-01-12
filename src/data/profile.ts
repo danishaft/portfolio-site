@@ -67,17 +67,5 @@ export const profile: Profile = {
         { name: "MySQL" },
       ],
     },
-    {
-      name: "Tools & Others",
-      skills: [
-        { name: "Docker" },
-        { name: "Vercel" },
-        { name: "Playwright" },
-        { name: "Vitest" },
-        { name: "Puppeteer" },
-        { name: "Chrome Extensions" },
-        { name: "Figma" },
-      ],
-    },
   ],
 }

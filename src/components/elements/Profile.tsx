@@ -8,6 +8,7 @@ import SocialLinks from "../shared/SocialLinks"
 import Greeting from "../shared/Greeting"
 import WorkExperienceSection from "./WorkExperienceSection"
 import SkillsSection from "./SkillsSection"
+import ContactSection from "./ContactSection"
 
 type ProfileProps = {
   profile: ProfileType
@@ -55,6 +56,8 @@ const Profile = (props: ProfileProps): React.ReactElement => {
     <SkillsSection skillCategories={profile.skillCategories} />
   ) : null
 
+  const contactSection = <ContactSection />
+
   return (
     <div>
       {/* Hero Section */}
@@ -91,6 +94,9 @@ const Profile = (props: ProfileProps): React.ReactElement => {
         {/* Skills Section */}
         {skillsSection}
       </div>
+
+      {/* Contact Section */}
+      {contactSection}
     </div>
   )
 }

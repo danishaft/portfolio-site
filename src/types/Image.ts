@@ -11,3 +11,5 @@ export type FluidImage = {
   srcSet: string
   sizes: string
 }
+
+
