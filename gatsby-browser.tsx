@@ -31,7 +31,8 @@ export function wrapPageElement(
 // https://github.com/rafgraph/spa-github-pages
 export function onClientEntry(): void {
   // Parse the query string
-  const pathSegmentsToKeep = 0
+  // Keep 1 path segment to preserve /portfolio-site prefix
+  const pathSegmentsToKeep = 1
   const l = window.location
   const pathIsIn404Format = l.pathname.includes("/?/")
   if (pathIsIn404Format) {

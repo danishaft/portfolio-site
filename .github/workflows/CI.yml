@@ -77,13 +77,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gatsby-cache-
 
-      - name: Cache Gatsby public folder
-        uses: actions/cache@v3
-        with:
-          path: public
-          key: ${{ runner.os }}-gatsby-public-${{ hashFiles('package-lock.json') }}-${{ hashFiles('src/**/*.{ts,tsx,mdx}') }}
-          restore-keys: |
-            ${{ runner.os }}-gatsby-public-
+      - name: Clean previous build
+        run: rm -rf public .cache
 
       - name: Build site
         run: npm run build
