@@ -61,15 +61,6 @@ const gatsbyConfig: GatsbyConfig = {
       },
     },
 
-    // @see: https://www.gatsbyjs.com/plugins/gatsby-source-filesystem/
-    {
-      resolve: "gatsby-source-filesystem",
-      options: {
-        name: "images",
-        path: `${__dirname}/src/images`,
-      },
-    },
-
     // @see: https://www.gatsbyjs.com/plugins/gatsby-plugin-mdx/
     {
       resolve: "gatsby-plugin-mdx",
