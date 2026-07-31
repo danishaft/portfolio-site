@@ -1,10 +1,9 @@
 export const siteURL = "https://danishaft.github.io/portfolio-site"
-export const defaultSiteTitle = "Ejeh Daniel.dev"
+export const defaultSiteTitle = "Ejeh Daniel"
 export const defaultSiteDescription =
-  "Personal website and project by Ejeh Daniel"
+  "Software engineer at Doow building product systems, AI agents, developer tools, and software for music producers."
 export const brandName = "Ejeh Daniel"
 export const windowNamePrefix = brandName
 export const windowNameSeparator = "|"
-export const twitterUser = "@EjehDaniel"
-// Path to the image that is placed in the 'static' folder.
-export const siteImage = "/static-assets/images/og.png"
+export const twitterUser = "@EjehAy_Daniel"
+export const siteImage = "/og.png"

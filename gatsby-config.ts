@@ -1,4 +1,4 @@
-import { GatsbyConfig } from "gatsby"
+import type { GatsbyConfig } from "gatsby"
 import { GOOGLE_ANALYTICS_ID } from "./src/config/analytics"
 import { rssPath } from "./src/constants/links"
 import {
@@ -7,6 +7,24 @@ import {
   metaFieldTitle,
   siteMetadata,
 } from "./src/data/siteMetadata"
+
+type FeedEdge = {
+  node: {
+    fields: { slug: string }
+    frontmatter: {
+      title: string
+      date: string
+      summary: string
+    }
+  }
+}
+
+type FeedSerializeArgs = {
+  query: {
+    site: { siteMetadata: Record<string, string> }
+    allMdx: { edges: FeedEdge[] }
+  }
+}
 
 const gatsbyConfig: GatsbyConfig = {
   siteMetadata,
@@ -18,9 +36,6 @@ const gatsbyConfig: GatsbyConfig = {
   },
 
   plugins: [
-    // @see: https://www.gatsbyjs.com/plugins/gatsby-plugin-postcss/
-    "gatsby-plugin-postcss",
-
     // @see: https://www.gatsbyjs.com/plugins/gatsby-plugin-image/
     "gatsby-plugin-image",
 
@@ -63,14 +78,6 @@ const gatsbyConfig: GatsbyConfig = {
         plugins: [],
         gatsbyRemarkPlugins: [
           // @see: https://www.gatsbyjs.com/plugins/gatsby-remark-images/
-          {
-            resolve: "gatsby-remark-images",
-            options: {
-              maxWidth: 1000,
-              linkImagesToOriginal: false,
-            },
-          },
-
           // @see: https://www.gatsbyjs.com/plugins/gatsby-remark-images-medium-zoom/
           {
             resolve: "gatsby-remark-images-medium-zoom",
@@ -120,14 +127,7 @@ const gatsbyConfig: GatsbyConfig = {
               // Ignoring these file extensions since they should be recognized and handled
               // by the gatsby-transformer-sharp plugin.
               // @see: https://www.gatsbyjs.com/plugins/gatsby-transformer-sharp/#parsing-algorithm
-              ignoreFileExtensions: [
-                "png",
-                "jpg",
-                "jpeg",
-                "tiff",
-                "tif",
-                "webp",
-              ],
+              ignoreFileExtensions: ["png", "jpg", "jpeg", "tiff", "tif", "webp"],
               // Save files like `02-demo.gif`
               // to `public/posts-assets/2a0039f3a61f4510f41678438e4c863a/02-demo.gif`
               destinationDir: (f: { name: string; hash: string }): string =>
@@ -165,10 +165,9 @@ const gatsbyConfig: GatsbyConfig = {
         `,
         feeds: [
           {
-            serialize: ({ query: { site, allMdx } }: any): any => {
-              return allMdx.edges.map((edge: any): any => {
-                const url =
-                  site.siteMetadata[metaFieldSiteUrl] + edge.node.fields.slug
+            serialize: ({ query: { site, allMdx } }: FeedSerializeArgs) => {
+              return allMdx.edges.map((edge) => {
+                const url = site.siteMetadata[metaFieldSiteUrl] + edge.node.fields.slug
                 return {
                   ...edge.node.frontmatter,
                   description: edge.node.frontmatter.summary,
@@ -183,7 +182,7 @@ const gatsbyConfig: GatsbyConfig = {
             },
             query: `
               {
-                allMdx(sort: { fields: [frontmatter___date], order: DESC }) {
+              allMdx(sort: { frontmatter: { date: DESC } }) {
                   edges {
                     node {
                       fields {
@@ -203,7 +202,7 @@ const gatsbyConfig: GatsbyConfig = {
               }
             `,
             output: rssPath,
-            title: "Ejeh Daniel.dev RSS Feed",
+            title: "Ejeh Daniel RSS Feed",
           },
         ],
       },

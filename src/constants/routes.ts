@@ -1,27 +1,21 @@
-type Slug = "home" | "projects" | "articles"
-
 export type Route = {
   path: string
   name: string
 }
 
-type Routes = Record<Slug, Route>
+export const routes = {
+  home: { path: "/", name: "Home" },
+  work: { path: "/work", name: "Work" },
+  projects: { path: "/projects", name: "Projects" },
+  writing: { path: "/articles", name: "Writing" },
+  about: { path: "/about", name: "About" },
+  resume: { path: "/resume", name: "Resume" },
+} satisfies Record<string, Route>
 
-export const routes: Routes = {
-  home: {
-    path: "/",
-    name: "About",
-  },
-  projects: {
-    path: "/projects",
-    name: "Projects",
-  },
-  articles: {
-    path: "/articles",
-    name: "Articles",
-  },
-}
-
-export const TOP_NAV: Route[] = [routes.projects, routes.articles]
-
-export const FOOTER_NAV: Route[] = []
+export const TOP_NAV: Route[] = [
+  routes.work,
+  routes.projects,
+  routes.writing,
+  routes.about,
+  routes.resume,
+]

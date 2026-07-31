@@ -1,38 +1,38 @@
-import * as React from "react"
-import { graphql, PageProps } from "gatsby"
-import { PostTemplateQuery } from "./__generated__/PostTemplateQuery"
-// import PostScreen from '../components/screens/PostScreen';
+import { graphql, type HeadFC, Link, type PageProps } from "gatsby"
+import { GatsbyImage, getImage, type IGatsbyImageData } from "gatsby-plugin-image"
+import React from "react"
+import { FiArrowLeft } from "react-icons/fi"
 
-interface BlogPostProps extends PageProps {
-  data: PostTemplateQuery
+import PageLayout from "../components/layouts/PageLayout"
+import SEO from "../components/shared/SEO"
+
+type PostData = {
+  mdx: {
+    fields: { slug: string }
+    frontmatter: {
+      title: string
+      summary: string
+      date: string
+      cover?: {
+        childImageSharp?: { gatsbyImageData: IGatsbyImageData }
+      }
+    }
+  }
 }
 
 export const query = graphql`
   query PostTemplateQuery($slug: String!) {
     mdx(fields: { slug: { eq: $slug } }) {
-      id
-      body
       fields {
         slug
-      }
-      internal {
-        contentFilePath
       }
       frontmatter {
         title
         summary
-        date(formatString: "DD MMMM, YYYY")
+        date(formatString: "MMMM D, YYYY")
         cover {
           childImageSharp {
-            gatsbyImageData(
-              layout: FULL_WIDTH
-              quality: 95
-              transformOptions: {
-                fit: COVER
-                cropFocus: CENTER
-                grayscale: false
-              }
-            )
+            gatsbyImageData(layout: FULL_WIDTH, quality: 90)
           }
         }
       }
@@ -40,12 +40,42 @@ export const query = graphql`
   }
 `
 
-const BlogPost = (props: BlogPostProps): React.ReactElement => {
-  const { data, children } = props
+const PostTemplate = ({ data, children }: PageProps<PostData>): React.ReactElement => {
+  const post = data.mdx
+  const cover = getImage(
+    post.frontmatter.cover?.childImageSharp?.gatsbyImageData ?? null
+  )
+
   return (
-    // <PostScreen post={data}>{children}</PostScreen>
-    <div>Post</div>
+    <PageLayout className="post-page">
+      <Link className="back-link" to="/articles">
+        <FiArrowLeft aria-hidden="true" /> All writing
+      </Link>
+      <header className="post-header">
+        <time>{post.frontmatter.date}</time>
+        <h1>{post.frontmatter.title}</h1>
+        <p>{post.frontmatter.summary}</p>
+      </header>
+      {cover ? (
+        <GatsbyImage
+          alt=""
+          className="post-cover"
+          image={cover}
+          imgStyle={{ objectFit: "cover" }}
+        />
+      ) : null}
+      <article className="prose post-content">{children}</article>
+    </PageLayout>
   )
 }
 
-export default BlogPost
+export default PostTemplate
+
+export const Head: HeadFC<PostData> = ({ data }) => (
+  <SEO
+    description={data.mdx.frontmatter.summary}
+    pathname={data.mdx.fields.slug}
+    title={data.mdx.frontmatter.title}
+    type="article"
+  />
+)

@@ -1,11 +1,10 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
+
+import * as path from "node:path"
+import type { CreateNodeArgs, CreatePagesArgs } from "gatsby"
 import { createFilePath } from "gatsby-source-filesystem"
-import { CreateNodeArgs, CreatePagesArgs } from "gatsby"
-import * as path from "path"
 import { routes } from "./src/constants/routes"
-import { projectMapToArray } from "./src/utils/project"
 import { projects } from "./src/data/projects"
-import { Project } from "./src/types/Project"
 
 export function onCreateNode(args: CreateNodeArgs): void {
   // Create a slug field for markdown post nodes.
@@ -16,7 +15,7 @@ export function onCreateNode(args: CreateNodeArgs): void {
     createNodeField({
       node,
       name: "slug",
-      value: routes.articles.path + slug,
+      value: routes.writing.path + slug,
     })
   }
 }
@@ -24,7 +23,10 @@ export function onCreateNode(args: CreateNodeArgs): void {
 type CreatePostPagesQuery = {
   data?: {
     allMdx?: {
-      nodes?: any[]
+      nodes?: Array<{
+        fields?: { slug?: string }
+        internal?: { contentFilePath?: string }
+      }>
     }
   }
 }
@@ -47,7 +49,10 @@ async function createPostPages(args: CreatePagesArgs): Promise<void> {
     }
   `)
 
-  ;(result?.data?.allMdx?.nodes || []).forEach(node => {
+  ;(result?.data?.allMdx?.nodes || []).forEach((node) => {
+    if (!node.fields?.slug || !node.internal?.contentFilePath) {
+      return
+    }
     createPage({
       path: node.fields.slug,
       component: `${path.resolve(
@@ -64,7 +69,7 @@ async function createPostPages(args: CreatePagesArgs): Promise<void> {
 async function createProjectPages(args: CreatePagesArgs): Promise<void> {
   const { actions } = args
   const { createPage } = actions
-  projectMapToArray(projects).forEach((project: Project) => {
+  projects.forEach((project) => {
     createPage({
       path: `${routes.projects.path}/${project.id}`,
       component: path.resolve("./src/templates/Project.tsx"),

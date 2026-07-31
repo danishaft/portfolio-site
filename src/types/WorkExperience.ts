@@ -1,9 +1,9 @@
-import { DateString } from "./Date"
-
 export type WorkExperience = {
-  company?: string
-  role?: string
-  startDate?: DateString
-  endDate?: DateString
-  description?: string
+  company: string
+  role: string
+  location: string
+  startDate: string
+  endDate: string
+  introduction?: string
+  highlights: string[]
 }

@@ -1,17 +1,31 @@
+import { graphql, type HeadFC, Link, type PageProps } from "gatsby"
+import { GatsbyImage, getImage, type IGatsbyImageData } from "gatsby-plugin-image"
 import React from "react"
-import { graphql, PageProps } from "gatsby"
+import { FiArrowRight } from "react-icons/fi"
 
-import BlogScreen from "../components/screens/BlogScreen"
-import { BlogPageQuery } from "./__generated__/BlogPageQuery"
+import PageLayout from "../components/layouts/PageLayout"
+import SEO from "../components/shared/SEO"
 
-interface BlogProps extends PageProps {
-  data: BlogPageQuery
+type WritingPageData = {
+  allMdx: {
+    nodes: Array<{
+      id: string
+      fields: { slug: string }
+      frontmatter: {
+        title: string
+        summary: string
+        date: string
+        cover?: {
+          childImageSharp?: { gatsbyImageData: IGatsbyImageData }
+        }
+      }
+    }>
+  }
 }
 
 export const query = graphql`
-  query BlogPageQuery {
+  query WritingPageQuery {
     allMdx(sort: { frontmatter: { date: DESC } }) {
-      totalCount
       nodes {
         id
         fields {
@@ -23,15 +37,7 @@ export const query = graphql`
           date(formatString: "MMM D, YYYY")
           cover {
             childImageSharp {
-              gatsbyImageData(
-                layout: FULL_WIDTH
-                quality: 95
-                transformOptions: {
-                  fit: COVER
-                  cropFocus: CENTER
-                  grayscale: false
-                }
-              )
+              gatsbyImageData(layout: CONSTRAINED, width: 720, quality: 88)
             }
           }
         }
@@ -40,10 +46,54 @@ export const query = graphql`
   }
 `
 
-const Blog = (props: BlogProps): React.ReactElement => {
-  const { data } = props
+const WritingPage = ({ data }: PageProps<WritingPageData>): React.ReactElement => {
+  return (
+    <PageLayout className="content-page">
+      <header className="page-intro">
+        <p className="eyebrow">Writing</p>
+        <h1>Notes from what I&apos;m learning and building.</h1>
+      </header>
 
-  return <BlogScreen posts={data} />
+      <div className="article-grid">
+        {data.allMdx.nodes.map((post) => {
+          const image = getImage(
+            post.frontmatter.cover?.childImageSharp?.gatsbyImageData ?? null
+          )
+          return (
+            <article className="article-card" key={post.id}>
+              {image ? (
+                <Link
+                  aria-label={`Read ${post.frontmatter.title}`}
+                  className="article-cover"
+                  to={post.fields.slug}
+                >
+                  <GatsbyImage alt="" image={image} imgStyle={{ objectFit: "cover" }} />
+                </Link>
+              ) : null}
+              <div>
+                <time>{post.frontmatter.date}</time>
+                <h2>
+                  <Link to={post.fields.slug}>{post.frontmatter.title}</Link>
+                </h2>
+                <p>{post.frontmatter.summary}</p>
+                <Link className="text-link" to={post.fields.slug}>
+                  Read article <FiArrowRight aria-hidden="true" />
+                </Link>
+              </div>
+            </article>
+          )
+        })}
+      </div>
+    </PageLayout>
+  )
 }
 
-export default Blog
+export default WritingPage
+
+export const Head: HeadFC = () => (
+  <SEO
+    description="Technical writing by Ejeh Daniel about software, React, automation, and computer systems."
+    pathname="/articles"
+    title="Writing"
+  />
+)

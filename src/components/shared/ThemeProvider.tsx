@@ -23,9 +23,7 @@ type ThemeProviderProps = {
   children: React.ReactNode
 }
 
-export const ThemeProvider = ({
-  children,
-}: ThemeProviderProps): React.ReactElement => {
+export const ThemeProvider = ({ children }: ThemeProviderProps): React.ReactElement => {
   const [theme, setTheme] = useState<Theme>("light")
   const [mounted, setMounted] = useState(false)
 
@@ -54,7 +52,7 @@ export const ThemeProvider = ({
   }, [theme, mounted])
 
   const toggleTheme = () => {
-    setTheme(prev => (prev === "light" ? "dark" : "light"))
+    setTheme((prev) => (prev === "light" ? "dark" : "light"))
   }
 
   return (
