@@ -13,7 +13,8 @@ The site has dedicated routes for the material a reviewer needs:
 - `/work` documents professional work at Doow.
 - `/projects` presents selected projects and evidence-backed project details.
 - `/articles` publishes long-form writing from MDX files.
-- `/about` gives personal and professional context.
+- `/` introduces Daniel and routes readers to the deeper sections.
+- `/about` tells Daniel's fuller story and links to his public profiles.
 - `/resume` provides a browser-readable and printable resume.
 
 The featured projects are REAPER MCP, StemSplitter, and Peruz. Project facts
