@@ -14,6 +14,5 @@ export type Project = {
   imageAlt?: string
   featured: boolean
   stack: string[]
-  highlights: string[]
   links: ProjectLink[]
 }

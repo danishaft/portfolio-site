@@ -1,52 +1,51 @@
-import { Link, withPrefix } from "gatsby"
+import { withPrefix } from "gatsby"
 import React from "react"
-import { FiArrowRight } from "react-icons/fi"
+import { FiArrowUpRight } from "react-icons/fi"
 
 import type { Project } from "../../types/Project"
 
 type ProjectListProps = {
   projects: Project[]
-  compact?: boolean
 }
 
-const ProjectList = ({
-  projects,
-  compact = false,
-}: ProjectListProps): React.ReactElement => {
+const ProjectLinks = ({ links }: Pick<Project, "links">): React.ReactElement => (
+  <div className="project-row-links">
+    {links.map((link) => (
+      <a href={link.url} key={link.url} rel="noreferrer" target="_blank">
+        {link.label} <FiArrowUpRight aria-hidden="true" />
+      </a>
+    ))}
+  </div>
+)
+
+const ProjectList = ({ projects }: ProjectListProps): React.ReactElement => {
   return (
-    <div className={`project-list ${compact ? "project-list--compact" : ""}`}>
-      {projects.map((project) => (
-        <article className="project-card" key={project.id}>
+    <div className="project-list">
+      {projects.map((project, index) => (
+        <article
+          className={`project-row ${project.image ? "" : "project-row--text"}`.trim()}
+          key={project.id}
+        >
           {project.image ? (
-            <Link
-              aria-label={`Read about ${project.name}`}
-              className="project-media"
-              to={`/projects/${project.id}`}
-            >
+            <div className="project-media">
               <img
                 alt={project.imageAlt || ""}
-                loading="lazy"
+                loading={index === 0 ? "eager" : "lazy"}
                 src={withPrefix(project.image)}
               />
-            </Link>
-          ) : (
-            <div className="project-media project-media--text" aria-hidden="true">
-              <span>{project.name}</span>
             </div>
-          )}
+          ) : null}
+
           <div className="project-copy">
             <div className="project-meta">
               <span>{project.category}</span>
               <span>{project.year}</span>
             </div>
-            <h3>
-              <Link to={`/projects/${project.id}`}>{project.name}</Link>
-            </h3>
+            <h2>{project.name}</h2>
             <p className="project-tagline">{project.tagline}</p>
-            <p>{project.summary}</p>
-            <Link className="text-link" to={`/projects/${project.id}`}>
-              View project <FiArrowRight aria-hidden="true" />
-            </Link>
+            <p className="project-summary">{project.summary}</p>
+            <p className="project-stack">{project.stack.join(" · ")}</p>
+            <ProjectLinks links={project.links} />
           </div>
         </article>
       ))}

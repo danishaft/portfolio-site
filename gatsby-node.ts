@@ -4,7 +4,6 @@ import * as path from "node:path"
 import type { CreateNodeArgs, CreatePagesArgs } from "gatsby"
 import { createFilePath } from "gatsby-source-filesystem"
 import { routes } from "./src/constants/routes"
-import { projects } from "./src/data/projects"
 
 export function onCreateNode(args: CreateNodeArgs): void {
   // Create a slug field for markdown post nodes.
@@ -66,21 +65,6 @@ async function createPostPages(args: CreatePagesArgs): Promise<void> {
   })
 }
 
-async function createProjectPages(args: CreatePagesArgs): Promise<void> {
-  const { actions } = args
-  const { createPage } = actions
-  projects.forEach((project) => {
-    createPage({
-      path: `${routes.projects.path}/${project.id}`,
-      component: path.resolve("./src/templates/Project.tsx"),
-      context: {
-        projectID: project.id,
-      },
-    })
-  })
-}
-
 export async function createPages(args: CreatePagesArgs): Promise<void> {
   await createPostPages(args)
-  await createProjectPages(args)
 }

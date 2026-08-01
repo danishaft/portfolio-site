@@ -1,9 +1,9 @@
 import { graphql, type HeadFC, Link, type PageProps } from "gatsby"
 import { GatsbyImage, getImage, type IGatsbyImageData } from "gatsby-plugin-image"
 import React from "react"
-import { FiArrowRight } from "react-icons/fi"
 
 import PageLayout from "../components/layouts/PageLayout"
+import PageHeader from "../components/shared/PageHeader"
 import SEO from "../components/shared/SEO"
 
 type WritingPageData = {
@@ -15,6 +15,7 @@ type WritingPageData = {
         title: string
         summary: string
         date: string
+        readTime: number
         cover?: {
           childImageSharp?: { gatsbyImageData: IGatsbyImageData }
         }
@@ -35,9 +36,10 @@ export const query = graphql`
           title
           summary
           date(formatString: "MMM D, YYYY")
+          readTime
           cover {
             childImageSharp {
-              gatsbyImageData(layout: CONSTRAINED, width: 720, quality: 88)
+              gatsbyImageData(layout: CONSTRAINED, width: 240, quality: 88)
             }
           }
         }
@@ -48,38 +50,32 @@ export const query = graphql`
 
 const WritingPage = ({ data }: PageProps<WritingPageData>): React.ReactElement => {
   return (
-    <PageLayout className="content-page">
-      <header className="page-intro">
-        <p className="eyebrow">Writing</p>
-        <h1>Notes from what I&apos;m learning and building.</h1>
-      </header>
+    <PageLayout className="writing-page" size="list">
+      <PageHeader title="Writing" />
 
-      <div className="article-grid">
+      <div className="article-list">
         {data.allMdx.nodes.map((post) => {
           const image = getImage(
             post.frontmatter.cover?.childImageSharp?.gatsbyImageData ?? null
           )
           return (
-            <article className="article-card" key={post.id}>
+            <article className="article-row" key={post.id}>
+              <Link className="article-row-copy" to={post.fields.slug}>
+                <time>
+                  {post.frontmatter.date} · {post.frontmatter.readTime} min read
+                </time>
+                <h2>{post.frontmatter.title}</h2>
+                <p>{post.frontmatter.summary}</p>
+              </Link>
               {image ? (
                 <Link
                   aria-label={`Read ${post.frontmatter.title}`}
-                  className="article-cover"
+                  className="article-row-cover"
                   to={post.fields.slug}
                 >
-                  <GatsbyImage alt="" image={image} imgStyle={{ objectFit: "cover" }} />
+                  <GatsbyImage alt="" image={image} />
                 </Link>
               ) : null}
-              <div>
-                <time>{post.frontmatter.date}</time>
-                <h2>
-                  <Link to={post.fields.slug}>{post.frontmatter.title}</Link>
-                </h2>
-                <p>{post.frontmatter.summary}</p>
-                <Link className="text-link" to={post.fields.slug}>
-                  Read article <FiArrowRight aria-hidden="true" />
-                </Link>
-              </div>
             </article>
           )
         })}

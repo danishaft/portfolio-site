@@ -1,50 +1,57 @@
-import type { HeadFC } from "gatsby"
+import { type HeadFC, withPrefix } from "gatsby"
 import React from "react"
 
 import PageLayout from "../components/layouts/PageLayout"
+import PageHeader from "../components/shared/PageHeader"
 import SEO from "../components/shared/SEO"
 import { workExperience } from "../data/work"
 
 const WorkPage = (): React.ReactElement => {
   return (
-    <PageLayout className="content-page">
-      <header className="page-intro">
-        <p className="eyebrow">Experience</p>
-        <h1>Work</h1>
-        <p>
-          I&apos;ve worked from the first version of Doow through its browser, desktop,
-          agent, data, and engineering systems.
-        </p>
-      </header>
+    <PageLayout className="work-page" size="list">
+      <PageHeader title="Work" />
 
-      <div className="experience-list">
+      <div className="work-list">
         {workExperience.map((experience) => (
           <article
-            className="experience-item"
+            className="work-entry"
             key={`${experience.company}-${experience.role}`}
           >
-            <div className="experience-heading">
-              <div>
-                <p>{experience.company}</p>
-                <h2>{experience.role}</h2>
-              </div>
-              <div className="experience-meta">
-                <span>
-                  {experience.startDate} – {experience.endDate}
-                </span>
-                <span>{experience.location}</span>
-              </div>
+            <div className={`work-logo ${experience.logo ? "" : "work-logo--text"}`}>
+              {experience.logo ? (
+                <img alt="" src={withPrefix(experience.logo)} />
+              ) : (
+                <span aria-hidden="true">ED</span>
+              )}
             </div>
-            {experience.introduction ? (
-              <p className="experience-intro">{experience.introduction}</p>
-            ) : null}
-            {experience.highlights.length ? (
-              <ul>
-                {experience.highlights.map((highlight) => (
-                  <li key={highlight}>{highlight}</li>
-                ))}
-              </ul>
-            ) : null}
+
+            <div className="work-entry-content">
+              <header className="work-entry-header">
+                <div>
+                  <h2>{experience.role}</h2>
+                  {experience.companyUrl ? (
+                    <a href={experience.companyUrl}>{experience.company}</a>
+                  ) : (
+                    <p>{experience.company}</p>
+                  )}
+                </div>
+                <p className="work-dates">
+                  {experience.startDate} – {experience.endDate}
+                </p>
+              </header>
+
+              {experience.introduction ? (
+                <p className="work-introduction">{experience.introduction}</p>
+              ) : null}
+
+              {experience.highlights.length ? (
+                <ul className="work-highlights">
+                  {experience.highlights.map((highlight) => (
+                    <li key={highlight}>{highlight}</li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
           </article>
         ))}
       </div>

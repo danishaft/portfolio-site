@@ -1,13 +1,12 @@
 import { graphql, type HeadFC, Link, type PageProps, withPrefix } from "gatsby"
+import { GatsbyImage, getImage, type IGatsbyImageData } from "gatsby-plugin-image"
 import React from "react"
-import { FiArrowRight, FiDownload } from "react-icons/fi"
+import { FiArrowRight, FiArrowUpRight } from "react-icons/fi"
 
-import ProjectList from "../components/elements/ProjectList"
 import PageLayout from "../components/layouts/PageLayout"
 import SEO from "../components/shared/SEO"
-import SectionHeading from "../components/shared/SectionHeading"
 import { routes } from "../constants/routes"
-import { featuredProjects } from "../data/projects"
+import { socialLinks } from "../data/socials"
 
 type HomePageData = {
   allMdx: {
@@ -18,6 +17,10 @@ type HomePageData = {
         title: string
         summary: string
         date: string
+        readTime: number
+        cover?: {
+          childImageSharp?: { gatsbyImageData: IGatsbyImageData }
+        }
       }
     }>
   }
@@ -35,6 +38,12 @@ export const query = graphql`
           title
           summary
           date(formatString: "MMM D, YYYY")
+          readTime
+          cover {
+            childImageSharp {
+              gatsbyImageData(layout: CONSTRAINED, width: 180, quality: 85)
+            }
+          }
         }
       }
     }
@@ -44,98 +53,93 @@ export const query = graphql`
 const IndexPage = ({ data }: PageProps<HomePageData>): React.ReactElement => {
   return (
     <PageLayout className="home-page">
-      <section className="hero-section">
-        <div className="hero-copy">
-          <p className="eyebrow">Software engineer · London</p>
-          <h1>Ejeh Daniel</h1>
-          <p className="hero-role">
-            I&apos;m a software engineer at <a href="https://doow.co">Doow</a>.
-          </p>
-          <p className="hero-statement">I build software I wish I had.</p>
-          <div className="hero-links">
-            <Link className="primary-link" to={routes.projects.path}>
-              See my work <FiArrowRight aria-hidden="true" />
-            </Link>
-            <a className="secondary-link" href={withPrefix("/ejeh-daniel-resume.pdf")}>
-              Resume <FiDownload aria-hidden="true" />
-            </a>
-          </div>
-        </div>
-        <figure className="hero-portrait">
+      <section className="home-introduction">
+        <div className="home-profile">
           <img
             alt="Ejeh Daniel wearing a burgundy suit outdoors"
             src={withPrefix("/media/profile.webp")}
           />
-        </figure>
-      </section>
-
-      <section className="home-section" id="selected-work">
-        <SectionHeading
-          description="Tools for producers, engineers, and people doing real work in software."
-          eyebrow="Selected work"
-          title="Products, not exercises"
-        />
-        <ProjectList projects={featuredProjects} />
-        <Link className="text-link section-link" to={routes.projects.path}>
-          View every project <FiArrowRight aria-hidden="true" />
-        </Link>
-      </section>
-
-      <section className="home-section work-preview">
-        <SectionHeading
-          description="I work across product, design, frontend, backend, and the systems used to ship and observe the product."
-          eyebrow="At Doow"
-          title="From product problem to production"
-        />
-        <div className="work-preview-grid">
-          <div>
-            <h3>Browser and desktop</h3>
-            <p>React interfaces, a Tauri and Rust host, and a shared monorepo.</p>
-          </div>
-          <div>
-            <h3>Derek and Mina</h3>
-            <p>AI agents with interactive spreadsheet and presentation applications.</p>
-          </div>
-          <div>
-            <h3>Hawky</h3>
-            <p>Internal AI review, security, test, and visual CI workflows.</p>
-          </div>
-          <div>
-            <h3>Product performance</h3>
-            <p>Core Web Vitals visibility through Grafana and Datadog.</p>
-          </div>
+          <h1>Ejeh Daniel</h1>
+          <nav aria-label="Social links" className="home-socials">
+            {socialLinks.map(({ external, icon: Icon, label, url }) => (
+              <a
+                aria-label={label}
+                href={url}
+                key={label}
+                rel={external ? "noreferrer" : undefined}
+                target={external ? "_blank" : undefined}
+                title={label}
+              >
+                <Icon aria-hidden="true" />
+              </a>
+            ))}
+          </nav>
         </div>
-        <Link className="text-link section-link" to={routes.work.path}>
-          Read about my work <FiArrowRight aria-hidden="true" />
-        </Link>
-      </section>
 
-      <section className="home-section writing-preview">
-        <SectionHeading eyebrow="Writing" title="Notes from the work" />
-        <div className="writing-list">
-          {data.allMdx.nodes.map((post) => (
-            <article className="writing-row" key={post.id}>
-              <time>{post.frontmatter.date}</time>
-              <div>
-                <h3>
-                  <Link to={post.fields.slug}>{post.frontmatter.title}</Link>
-                </h3>
-                <p>{post.frontmatter.summary}</p>
-              </div>
-              <Link aria-label={`Read ${post.frontmatter.title}`} to={post.fields.slug}>
-                <FiArrowRight aria-hidden="true" />
-              </Link>
-            </article>
-          ))}
+        <div className="home-bio">
+          <p>
+            I&apos;m a software engineer at <a href="https://doow.co">Doow</a>, working
+            across frontend, backend, desktop applications, and AI agents, with a deeper
+            specialization in React and TypeScript.
+          </p>
+          <p>
+            I like going deep and really understanding how things work, and I like going
+            broad and thinking about the big picture. I&apos;m good at learning and
+            adapting, and I love mentoring and being a team enabler just as much as I
+            love technical challenges.
+          </p>
         </div>
+
+        <nav aria-label="Portfolio sections" className="home-destinations">
+          <Link to={routes.about.path}>
+            About <FiArrowUpRight aria-hidden="true" />
+          </Link>
+          <Link to={routes.work.path}>
+            Work <FiArrowUpRight aria-hidden="true" />
+          </Link>
+          <Link to={routes.projects.path}>
+            Projects <FiArrowUpRight aria-hidden="true" />
+          </Link>
+          <Link to={routes.resume.path}>
+            Resume <FiArrowUpRight aria-hidden="true" />
+          </Link>
+        </nav>
       </section>
 
-      <section className="contact-band">
-        <p className="eyebrow">Contact</p>
-        <h2>Let&apos;s talk about the work.</h2>
-        <a href="mailto:connectejehdanielayo@outlook.com">
-          connectejehdanielayo@outlook.com
-        </a>
+      <section className="home-writing">
+        <header className="editorial-section-header">
+          <h2>Latest writing</h2>
+          <Link to={routes.writing.path}>
+            View all <FiArrowRight aria-hidden="true" />
+          </Link>
+        </header>
+        <div className="home-post-list">
+          {data.allMdx.nodes.map((post) => {
+            const cover = getImage(
+              post.frontmatter.cover?.childImageSharp?.gatsbyImageData ?? null
+            )
+            return (
+              <article className="home-post" key={post.id}>
+                <Link className="home-post-copy" to={post.fields.slug}>
+                  <time>
+                    {post.frontmatter.date} · {post.frontmatter.readTime} min read
+                  </time>
+                  <h3>{post.frontmatter.title}</h3>
+                  <p>{post.frontmatter.summary}</p>
+                </Link>
+                {cover ? (
+                  <Link
+                    aria-label={`Read ${post.frontmatter.title}`}
+                    className="home-post-cover"
+                    to={post.fields.slug}
+                  >
+                    <GatsbyImage alt="" image={cover} />
+                  </Link>
+                ) : null}
+              </article>
+            )
+          })}
+        </div>
       </section>
     </PageLayout>
   )

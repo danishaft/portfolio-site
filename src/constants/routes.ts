@@ -5,10 +5,10 @@ export type Route = {
 
 export const routes = {
   home: { path: "/", name: "Home" },
+  about: { path: "/about", name: "About" },
   work: { path: "/work", name: "Work" },
   projects: { path: "/projects", name: "Projects" },
   writing: { path: "/articles", name: "Writing" },
-  about: { path: "/about", name: "About" },
   resume: { path: "/resume", name: "Resume" },
 } satisfies Record<string, Route>
 
