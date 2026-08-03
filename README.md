@@ -87,4 +87,5 @@ short-lived `GITHUB_TOKEN`; it does not require a personal access token.
 
 ## License
 
-This project uses the [0BSD license](LICENSE).
+Daniel's original work uses the [MIT license](LICENSE). The
+[third-party notice](NOTICE) preserves the Gatsby starter's 0BSD terms.
