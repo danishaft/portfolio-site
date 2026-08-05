@@ -11,7 +11,7 @@ export const projects: Project[] = [
       "Built so an AI collaborator can work inside the same REAPER project as the producer, rather than replacing the DAW. Its 170 operations cover the path from an empty session to an arranged, mixed, mastered, and rendered song, with every change visible and undoable.",
     image: "/media/projects/reaper-mcp.webp",
     imageAlt:
-      "A multitrack digital audio workstation with waveforms, MIDI notes, automation, mixer channels, and analysis panels",
+      "A REAPER 7 production session with vocal and instrument tracks, waveforms, automation, and the mixer behind the REAPER MCP title",
     featured: true,
     stack: ["Python", "Lua", "MCP", "REST", "REAPER"],
     links: [
