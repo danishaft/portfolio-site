@@ -20,7 +20,7 @@ export const workExperience: WorkExperience[] = [
   {
     company: "Doow",
     companyUrl: "https://doow.co",
-    role: "Frontend Engineering Intern",
+    role: "Frontend Engineer",
     location: "Remote",
     startDate: "May 2023",
     endDate: "November 2023",
