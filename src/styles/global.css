@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap");
 @import "./custom.css";
 
 :root {
@@ -50,6 +50,23 @@ body {
   min-width: 320px;
 }
 
+#site-texture {
+  inset: 0;
+  min-height: 100vh;
+  pointer-events: none;
+  position: fixed;
+  transform: translateZ(0);
+  width: 100vw;
+  z-index: 0;
+  opacity: 0.18;
+  filter: contrast(170%) brightness(100%);
+}
+
+.dark #site-texture {
+  opacity: 0.22;
+  filter: contrast(140%) brightness(100%);
+}
+
 body,
 button,
 input,
@@ -65,6 +82,7 @@ h4 {
   font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   font-weight: 600;
   line-height: 1.08;
+  letter-spacing: -0.01em;
   margin: 0;
 }
 
@@ -99,6 +117,8 @@ a {
 
 .site-frame {
   min-height: 100vh;
+  position: relative;
+  z-index: 1;
 }
 
 .page-shell,
@@ -122,9 +142,12 @@ a {
 }
 
 .site-header {
-  background: var(--background);
-  border-bottom: 1px solid var(--border);
-  position: relative;
+  background: color-mix(in srgb, var(--background) 72% transparent);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 55% transparent);
+  position: sticky;
+  top: 0;
   z-index: 50;
 }
 
@@ -154,18 +177,44 @@ a {
 
 .primary-nav {
   gap: 28px;
+  position: relative;
 }
 
 .primary-nav a {
   color: var(--muted);
   font-size: 14px;
   font-weight: 500;
+  position: relative;
   text-decoration: none;
+  transition: color 150ms ease;
 }
 
-.primary-nav a.active,
 .primary-nav a:hover {
+  color: var(--accent-strong);
+}
+
+.primary-nav a.active {
   color: var(--text);
+}
+
+.nav-indicator {
+  background: var(--accent-strong);
+  bottom: -8px;
+  height: 2px;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  transition:
+    left 500ms cubic-bezier(0.68, -0.55, 0.27, 1.55),
+    width 500ms cubic-bezier(0.68, -0.55, 0.27, 1.55),
+    opacity 300ms ease;
+  width: 0;
+}
+
+@media (max-width: 900px) {
+  .nav-indicator {
+    display: none;
+  }
 }
 
 .icon-button {
@@ -214,6 +263,11 @@ a {
   font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;
+}
+
+.accent-word {
+  color: var(--accent-strong);
+  font-weight: 600;
 }
 
 .resume-toolbar a {
@@ -331,21 +385,65 @@ a {
 }
 
 .home-post-list {
-  border-top: 1px solid var(--border);
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   margin-top: 24px;
 }
 
 .home-post {
-  align-items: center;
-  border-bottom: 1px solid var(--border);
-  display: grid;
-  gap: 28px;
-  grid-template-columns: minmax(0, 1fr) 112px;
-  padding: 24px 0;
+  border: 0;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: -4px -8px;
+  padding: 8px 8px;
+  position: relative;
+}
+
+.home-post-hover {
+  background: color-mix(in srgb, var(--surface) 82% transparent);
+  backdrop-filter: blur(8px) saturate(160%);
+  -webkit-backdrop-filter: blur(8px) saturate(160%);
+  border: 1px solid color-mix(in srgb, var(--border) 45% transparent);
+  border-radius: 8px;
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--border) 22% transparent),
+    0 4px 16px color-mix(in srgb, var(--text) 6% transparent);
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.dark .home-post-hover {
+  background: color-mix(in srgb, var(--surface) 70% transparent);
+  border-color: color-mix(in srgb, var(--border) 35% transparent);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.18),
+    0 8px 24px rgba(0, 0, 0, 0.22);
 }
 
 .home-post-copy {
+  position: relative;
   text-decoration: none;
+  z-index: 1;
+}
+
+/* Home list: hide side cover image — preview is via HoverPreview only */
+.home-post .home-post-cover {
+  display: none;
+}
+
+.home-writing-preview {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .home-writing-preview {
+    display: block;
+  }
 }
 
 .home-post time {
@@ -364,6 +462,7 @@ a {
   margin-top: 5px;
 }
 
+/* .home-post-cover hidden on home — kept for /writing article-row-cover */
 .home-post-cover {
   aspect-ratio: 4 / 3;
   border-radius: 5px;
@@ -1124,12 +1223,8 @@ a {
   }
 
   .home-post {
-    gap: 18px;
-    grid-template-columns: minmax(0, 1fr) 84px;
-  }
-
-  .home-post p {
-    display: none;
+    gap: 8px;
+    /* keep flex layout on mobile — no grid, no line separators */
   }
 
   .projects-page,
@@ -1290,16 +1385,20 @@ a {
   }
 
   .resume-header {
-    padding-bottom: 16px;
+    padding-bottom: 12px;
+  }
+
+  .resume-header h1 {
+    font-size: 36px;
   }
 
   .resume-section {
-    margin-top: 18px;
+    margin-top: 14px;
   }
 
   .resume-entry,
   .resume-project {
-    margin-top: 11px;
+    margin-top: 8px;
   }
 
   .resume-entry > p {
@@ -1311,11 +1410,38 @@ a {
   }
 
   .resume-entry li + li {
-    margin-top: 2px;
+    margin-top: 1px;
+  }
+
+  .resume-entry-heading p,
+  .resume-entry > p,
+  .resume-entry li,
+  .resume-project p,
+  .resume-skills p {
+    font-size: 11.5px;
+    line-height: 1.38;
   }
 
   .resume-entry,
   .resume-project {
     break-inside: avoid;
+  }
+
+  .resume-project {
+    display: block;
+  }
+
+  .resume-project > div {
+    align-items: baseline;
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .resume-project > div p {
+    margin-top: 0;
+  }
+
+  .resume-project > p {
+    margin-top: 2px;
   }
 }

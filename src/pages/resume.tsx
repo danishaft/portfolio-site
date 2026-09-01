@@ -1,7 +1,6 @@
 import type { HeadFC } from "gatsby"
 import { withPrefix } from "gatsby"
 import React from "react"
-import { FaGithub, FaLinkedin } from "react-icons/fa"
 import { FiDownload, FiLink } from "react-icons/fi"
 
 import PageLayout from "../components/layouts/PageLayout"
@@ -37,17 +36,11 @@ const ResumePage = (): React.ReactElement => {
             <span className="resume-contact-separator" aria-hidden="true">
               •
             </span>
-            <a href="https://github.com/danishaft">
-              <FaGithub aria-hidden="true" />
-              danishaft
-            </a>
+            <a href="https://github.com/danishaft">GitHub</a>
             <span className="resume-contact-separator" aria-hidden="true">
               •
             </span>
-            <a href="https://www.linkedin.com/in/ejeh-daniel-482409190/">
-              <FaLinkedin aria-hidden="true" />
-              Ejeh Daniel
-            </a>
+            <a href="https://www.linkedin.com/in/ejeh-daniel-482409190/">LinkedIn</a>
             <span className="resume-contact-separator" aria-hidden="true">
               •
             </span>
@@ -128,8 +121,8 @@ const ResumePage = (): React.ReactElement => {
             HTML, CSS
           </p>
           <p>
-            <strong>Frontend:</strong> React, Next.js, Tailwind CSS, Shadcn UI,
-            Storybook
+            <strong>Frontend:</strong> React, Next.js, Tailwind CSS, Radix UI, Shadcn
+            UI, Framer Motion, Storybook
           </p>
           <p>
             <strong>Backend and data:</strong> Node.js, FastAPI, PostgreSQL, Redis,

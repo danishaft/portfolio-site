@@ -25,3 +25,122 @@
 .dark .prose pre {
   background: #080a0b;
 }
+
+.primary-nav-disabled {
+  color: var(--muted);
+  cursor: not-allowed;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.65;
+}
+
+.visually-hidden {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.sound-page {
+  padding-top: 88px;
+}
+
+.sound-page .page-header {
+  margin-bottom: 48px;
+  max-width: 720px;
+}
+
+.sound-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.sound-card {
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  min-height: 360px;
+}
+
+.sound-card-art {
+  align-items: center;
+  background:
+    radial-gradient(circle at 75% 25%, rgb(85 197 204 / 35%), transparent 28%),
+    linear-gradient(135deg, #10191c, #263437 55%, #9b483f);
+  color: #f4f6f7;
+  display: flex;
+  flex: 1;
+  font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  justify-content: space-between;
+  min-height: 220px;
+  padding: 22px;
+}
+
+.sound-card:nth-child(2) .sound-card-art {
+  background:
+    radial-gradient(circle at 25% 25%, rgb(197 70 57 / 45%), transparent 30%),
+    linear-gradient(135deg, #261b1b, #3d2925 55%, #596d68);
+}
+
+.sound-card:nth-child(3) .sound-card-art {
+  background:
+    radial-gradient(circle at 70% 70%, rgb(85 197 204 / 40%), transparent 30%),
+    linear-gradient(135deg, #11191f, #203b45 55%, #536158);
+}
+
+.sound-card-wave {
+  font-size: 30px;
+  letter-spacing: 4px;
+  opacity: 0.85;
+  transform: rotate(-12deg);
+}
+
+.sound-card-copy {
+  padding: 22px;
+}
+
+.sound-card-meta {
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sound-card h2 {
+  font-size: 24px;
+  margin-top: 8px;
+}
+
+.sound-card-copy > p:last-child {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.sound-note {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 56px;
+  max-width: 680px;
+  padding-top: 20px;
+}
+
+@media (max-width: 800px) {
+  .sound-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sound-card {
+    min-height: 0;
+  }
+
+  .sound-card-art {
+    min-height: 180px;
+  }
+}

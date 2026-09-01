@@ -28,7 +28,10 @@ type FeedSerializeArgs = {
 
 const gatsbyConfig: GatsbyConfig = {
   siteMetadata,
-  pathPrefix: process.env.GATSBY_PATH_PREFIX || "/portfolio-site",
+  pathPrefix:
+    process.env.GATSBY_PATH_PREFIX !== undefined
+      ? process.env.GATSBY_PATH_PREFIX
+      : "/portfolio-site",
 
   flags: {
     // Use DEV_SSR to debug the SSR related issues locally (i.e. hydration related ones).
@@ -60,6 +63,14 @@ const gatsbyConfig: GatsbyConfig = {
         path: `${__dirname}/src/posts`,
       },
     },
+    // Temporarily disabled drafts source to avoid MDX compile error on private/article-drafts/diary-of-a-helium-user.md (will re-enable after fixing markdown)
+    // {
+    //   resolve: "gatsby-source-filesystem",
+    //   options: {
+    //     name: "drafts",
+    //     path: `${__dirname}/private/article-drafts`,
+    //   },
+    // },
 
     // @see: https://www.gatsbyjs.com/plugins/gatsby-plugin-mdx/
     {

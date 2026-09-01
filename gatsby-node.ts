@@ -10,12 +10,24 @@ export function onCreateNode(args: CreateNodeArgs): void {
   const { actions, node, getNode } = args
   const { createNodeField } = actions
   if (node.internal.type === "Mdx") {
+    const parent = getNode(node.parent as string) as unknown as {
+      sourceInstanceName?: string
+    } | null
+    const isDraft = parent?.sourceInstanceName === "drafts"
     const slug = createFilePath({ node, getNode })
+    const basePath = isDraft ? routes.drafts.path : routes.writing.path
     createNodeField({
       node,
       name: "slug",
-      value: routes.writing.path + slug,
+      value: basePath + slug,
     })
+    if (isDraft) {
+      createNodeField({
+        node,
+        name: "isDraft",
+        value: true,
+      })
+    }
   }
 }
 
