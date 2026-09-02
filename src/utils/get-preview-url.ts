@@ -3,7 +3,7 @@
 // For Gatsby articles: prefer cover publicURL, fallback to preview by slug
 
 export function getPreviewUrl(
-  slug: string,
+  _slug: string,
   coverPublicUrl?: string | null
 ): string | null {
   if (coverPublicUrl) {

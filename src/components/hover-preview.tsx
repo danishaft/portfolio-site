@@ -7,7 +7,11 @@ type HoverPreviewProps = {
   title?: string
 }
 
-const HoverPreview = ({ anchorRect, previewUrl, title }: HoverPreviewProps): React.ReactElement | null => {
+const HoverPreview = ({
+  anchorRect,
+  previewUrl,
+  title,
+}: HoverPreviewProps): React.ReactElement | null => {
   if (!anchorRect) return null
 
   const top = anchorRect.top
@@ -50,7 +54,7 @@ const HoverPreview = ({ anchorRect, previewUrl, title }: HoverPreviewProps): Rea
           {previewUrl ? (
             <img
               alt={title ? `Preview of ${title}` : ""}
-              src={src}
+              src={src ?? undefined}
               style={{
                 display: "block",
                 width: "100%",
@@ -62,7 +66,6 @@ const HoverPreview = ({ anchorRect, previewUrl, title }: HoverPreviewProps): Rea
           ) : (
             <div
               style={{
-                display: "block",
                 width: "100%",
                 height: "100%",
                 display: "flex",
@@ -70,9 +73,10 @@ const HoverPreview = ({ anchorRect, previewUrl, title }: HoverPreviewProps): Rea
                 justifyContent: "center",
                 color: "var(--muted)",
                 fontSize: 12,
-              }}>
-                {title ? `Preview of ${title}` : "No preview"}
-              </div>
+              }}
+            >
+              {title ? `Preview of ${title}` : "No preview"}
+            </div>
           )}
         </div>
         {title ? (

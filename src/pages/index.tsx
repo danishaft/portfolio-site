@@ -1,6 +1,6 @@
+import { motion } from "framer-motion"
 import { graphql, type HeadFC, Link, type PageProps, withPrefix } from "gatsby"
 import { GatsbyImage, getImage, type IGatsbyImageData } from "gatsby-plugin-image"
-import { motion } from "framer-motion"
 import React, { memo, useCallback, useState } from "react"
 import { FiArrowRight, FiArrowUpRight } from "react-icons/fi"
 
@@ -138,9 +138,12 @@ const ItemRow = memo(function ItemRow({
 const IndexPage = ({ data }: PageProps<HomePageData>): React.ReactElement => {
   const [hover, setHover] = useState<HoverState | null>(null)
 
-  const handleHover = useCallback((id: string, rect: DOMRect, previewUrl: string | null) => {
-    setHover({ id, rect, previewUrl })
-  }, [])
+  const handleHover = useCallback(
+    (id: string, rect: DOMRect, previewUrl: string | null) => {
+      setHover({ id, rect, previewUrl })
+    },
+    []
+  )
 
   const handleLeave = useCallback(() => {
     setHover(null)
@@ -150,7 +153,10 @@ const IndexPage = ({ data }: PageProps<HomePageData>): React.ReactElement => {
     <PageLayout className="home-page">
       <section className="home-introduction">
         <div className="home-profile">
-          <img alt="Ejeh Daniel wearing a burgundy suit outdoors" src={withPrefix("/media/profile.webp")} />
+          <img
+            alt="Ejeh Daniel wearing a burgundy suit outdoors"
+            src={withPrefix("/media/profile.webp")}
+          />
           <h1>Ejeh Daniel</h1>
           <nav aria-label="Social links" className="home-socials">
             {socialLinks.map(({ external, icon: Icon, label, url }) => (
@@ -170,16 +176,18 @@ const IndexPage = ({ data }: PageProps<HomePageData>): React.ReactElement => {
 
         <div className="home-bio">
           <p>
-            I&apos;m a <span className="accent-word">software engineer at Doow</span>, working across{" "}
-            <span className="accent-word">frontend, backend</span>, desktop applications, and{" "}
-            <span className="accent-word">AI agents</span>, with a deeper specialization in{" "}
+            I&apos;m a <span className="accent-word">software engineer at Doow</span>,
+            working across <span className="accent-word">frontend, backend</span>,
+            desktop applications, and <span className="accent-word">AI agents</span>,
+            with a deeper specialization in{" "}
             <span className="accent-word">React and TypeScript</span>.
           </p>
           <p>
-            I like going deep and really understanding how things work, and I like going broad and thinking about the
-            big picture. I&apos;m good at learning and adapting, and I love{" "}
-            <span className="accent-word">mentoring</span> and being a{" "}
-            <span className="accent-word">team enabler</span> just as much as I love technical challenges.
+            I like going deep and really understanding how things work, and I like going
+            broad and thinking about the big picture. I&apos;m good at learning and
+            adapting, and I love <span className="accent-word">mentoring</span> and
+            being a <span className="accent-word">team enabler</span> just as much as I
+            love technical challenges.
           </p>
         </div>
 
@@ -206,12 +214,15 @@ const IndexPage = ({ data }: PageProps<HomePageData>): React.ReactElement => {
             View all <FiArrowRight aria-hidden="true" />
           </Link>
         </header>
+        {/* biome-ignore lint/a11y/noStaticElementInteractions: hover preview container */}
         <div className="home-post-list" onMouseLeave={handleLeave}>
           {data.allMdx.nodes.map((post, i) => {
-            const gatsbyData = post.frontmatter.cover?.childImageSharp?.gatsbyImageData ?? null
+            const gatsbyData =
+              post.frontmatter.cover?.childImageSharp?.gatsbyImageData ?? null
             // getImage normalizes gatsbyImageData for GatsbyImage; fallback to raw data
             const normalized = getImage(gatsbyData)
-            const coverImage = (normalized ?? (gatsbyData as unknown as IGatsbyImageData | null)) as IGatsbyImageData | null
+            const coverImage = (normalized ??
+              (gatsbyData as unknown as IGatsbyImageData | null)) as IGatsbyImageData | null
             const coverPublicUrl = post.frontmatter.cover?.publicURL ?? null
             const rawPreviewUrl = getPreviewUrl(post.fields.slug, coverPublicUrl)
             // withPrefix is idempotent — ensures pathPrefix works in prod and dev
@@ -238,7 +249,15 @@ const IndexPage = ({ data }: PageProps<HomePageData>): React.ReactElement => {
         </div>
         {/* Hidden on mobile, visible md:block equivalent */}
         <div className="home-writing-preview" aria-hidden="true">
-          <HoverPreview anchorRect={hover?.rect ?? null} previewUrl={hover?.previewUrl ?? null} title={hover ? data.allMdx.nodes.find((n) => n.id === hover.id)?.frontmatter.title : undefined} />
+          <HoverPreview
+            anchorRect={hover?.rect ?? null}
+            previewUrl={hover?.previewUrl ?? null}
+            title={
+              hover
+                ? data.allMdx.nodes.find((n) => n.id === hover.id)?.frontmatter.title
+                : undefined
+            }
+          />
         </div>
       </section>
     </PageLayout>
