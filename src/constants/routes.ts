@@ -18,9 +18,9 @@ export const routes = {
 export const TOP_NAV: Route[] = [
   routes.work,
   routes.projects,
-  routes.sound,
+  // routes.sound,
   routes.writing,
-  routes.drafts,
+  // routes.drafts,
   routes.about,
   routes.resume,
 ]
