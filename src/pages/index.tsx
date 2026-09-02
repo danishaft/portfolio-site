@@ -1,7 +1,7 @@
 import { motion } from "framer-motion"
 import { graphql, type HeadFC, Link, type PageProps, withPrefix } from "gatsby"
 import { GatsbyImage, getImage, type IGatsbyImageData } from "gatsby-plugin-image"
-import React, { memo, useCallback, useState } from "react"
+import React, { memo, useCallback, useEffect, useState } from "react"
 import { FiArrowRight, FiArrowUpRight } from "react-icons/fi"
 
 import HoverPreview from "../components/hover-preview"
@@ -149,6 +149,13 @@ const IndexPage = ({ data }: PageProps<HomePageData>): React.ReactElement => {
     setHover(null)
   }, [])
 
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    const onScroll = () => setHover(null)
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
+
   return (
     <PageLayout className="home-page">
       <section className="home-introduction">
@@ -225,7 +232,7 @@ const IndexPage = ({ data }: PageProps<HomePageData>): React.ReactElement => {
               (gatsbyData as unknown as IGatsbyImageData | null)) as IGatsbyImageData | null
             const coverPublicUrl = post.frontmatter.cover?.publicURL ?? null
             const rawPreviewUrl = getPreviewUrl(post.fields.slug, coverPublicUrl)
-            // withPrefix is idempotent — ensures pathPrefix works in prod and dev
+            // withPrefix needed for prod (/portfolio-site/static/...), dev serves at /portfolio-site with --prefix-paths
             const previewUrl = rawPreviewUrl ? withPrefix(rawPreviewUrl) : null
             const isHovered = hover?.id === post.id
             return (

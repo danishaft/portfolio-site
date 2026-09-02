@@ -1,4 +1,3 @@
-import { withPrefix } from "gatsby"
 import React from "react"
 
 type HoverPreviewProps = {
@@ -18,9 +17,10 @@ const HoverPreview = ({
   // Match looskie: anchorRect.right + 12
   const left = anchorRect.right + 12
 
-  // withPrefix is idempotent — normalizes for pathPrefix (/portfolio-site) builds
-  // If previewUrl is provided, use it; otherwise show a placeholder pill
-  const src = previewUrl ? withPrefix(previewUrl) : null
+  const [imgError, setImgError] = React.useState(false)
+  React.useEffect(() => setImgError(false), [previewUrl])
+
+  const src = previewUrl
 
   return (
     <div
@@ -51,7 +51,7 @@ const HoverPreview = ({
             background: previewUrl ? "var(--background)" : "var(--muted)",
           }}
         >
-          {previewUrl ? (
+          {previewUrl && !imgError ? (
             <img
               alt={title ? `Preview of ${title}` : ""}
               src={src ?? undefined}
@@ -62,6 +62,7 @@ const HoverPreview = ({
                 objectFit: "cover",
               }}
               loading="eager"
+              onError={() => setImgError(true)}
             />
           ) : (
             <div
