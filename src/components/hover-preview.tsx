@@ -11,14 +11,15 @@ const HoverPreview = ({
   previewUrl,
   title,
 }: HoverPreviewProps): React.ReactElement | null => {
+  const [imgError, setImgError] = React.useState(false)
+  // biome-ignore lint/correctness/useExhaustiveDependencies: reset on previewUrl change
+  React.useEffect(() => setImgError(false), [previewUrl])
+
   if (!anchorRect) return null
 
   const top = anchorRect.top
   // Match looskie: anchorRect.right + 12
   const left = anchorRect.right + 12
-
-  const [imgError, setImgError] = React.useState(false)
-  React.useEffect(() => setImgError(false), [previewUrl])
 
   const src = previewUrl
 
