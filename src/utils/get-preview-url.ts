@@ -9,11 +9,9 @@ export function getPreviewUrl(
   if (coverPublicUrl) {
     return coverPublicUrl
   }
-  if (!slug) return null
-  // Normalize slug: /articles/how-computers-work/ -> how-computers-work
-  const clean = slug.replace(/^\/|\/$/g, "").split("/").pop()
-  if (!clean) return null
-  return `/images/previews/${clean}.png`
+  // No fallback preview dir — return null so hover shows pill only, no broken img
+  // (previews dir does not exist; use cover only)
+  return null
 }
 
 export function getPreviewUrlForPost(post: {

@@ -1,5 +1,5 @@
 import { graphql, type HeadFC, Link, type PageProps, withPrefix } from "gatsby"
-import { getImage, type IGatsbyImageData } from "gatsby-plugin-image"
+import { GatsbyImage, getImage, type IGatsbyImageData } from "gatsby-plugin-image"
 import { motion } from "framer-motion"
 import React, { memo, useCallback, useState } from "react"
 import { FiArrowRight, FiArrowUpRight } from "react-icons/fi"
@@ -83,6 +83,7 @@ type ItemRowProps = {
 }
 
 const ItemRow = memo(function ItemRow({
+  coverImage,
   id,
   slug,
   title,
@@ -125,15 +126,10 @@ const ItemRow = memo(function ItemRow({
         <h3>{title}</h3>
         <p>{summary}</p>
       </Link>
-      {/* Hidden preload img for HoverPreview — keeps previewUrl warm, no visible side image */}
-      {previewUrl ? (
-        <img
-          aria-hidden="true"
-          alt=""
-          src={withPrefix(previewUrl)}
-          loading="eager"
-          style={{ display: "none" }}
-        />
+      {coverImage ? (
+        <Link className="home-post-cover" to={slug} aria-hidden="true" tabIndex={-1}>
+          <GatsbyImage alt={title} image={coverImage} />
+        </Link>
       ) : null}
     </motion.article>
   )
@@ -212,14 +208,15 @@ const IndexPage = ({ data }: PageProps<HomePageData>): React.ReactElement => {
         </header>
         <div className="home-post-list" onMouseLeave={handleLeave}>
           {data.allMdx.nodes.map((post, i) => {
-            const cover = getImage(post.frontmatter.cover?.childImageSharp?.gatsbyImageData ?? null) as unknown as IGatsbyImageData | null
-            // getImage returns object with images; cast for GatsbyImage
-            const gatsbyCover = (post.frontmatter.cover?.childImageSharp?.gatsbyImageData ?? null) as IGatsbyImageData | null
+            const gatsbyData = post.frontmatter.cover?.childImageSharp?.gatsbyImageData ?? null
+            // getImage normalizes gatsbyImageData for GatsbyImage; fallback to raw data
+            const normalized = getImage(gatsbyData)
+            const coverImage = (normalized ?? (gatsbyData as unknown as IGatsbyImageData | null)) as IGatsbyImageData | null
             const coverPublicUrl = post.frontmatter.cover?.publicURL ?? null
-            const previewUrl = getPreviewUrl(post.fields.slug, coverPublicUrl)
+            const rawPreviewUrl = getPreviewUrl(post.fields.slug, coverPublicUrl)
+            // withPrefix is idempotent — ensures pathPrefix works in prod and dev
+            const previewUrl = rawPreviewUrl ? withPrefix(rawPreviewUrl) : null
             const isHovered = hover?.id === post.id
-            // Use getImage result for rendering if available, else gatsbyCover
-            const imageForRender = cover ?? (gatsbyCover as unknown as IGatsbyImageData | null)
             return (
               <ItemRow
                 key={post.id}
@@ -229,7 +226,7 @@ const IndexPage = ({ data }: PageProps<HomePageData>): React.ReactElement => {
                 summary={post.frontmatter.summary}
                 date={post.frontmatter.date}
                 readTime={post.frontmatter.readTime}
-                coverImage={imageForRender}
+                coverImage={coverImage}
                 coverPublicUrl={coverPublicUrl}
                 previewUrl={previewUrl}
                 index={i}

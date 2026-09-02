@@ -1,5 +1,4 @@
 import { withPrefix } from "gatsby"
-import { AnimatePresence, motion } from "framer-motion"
 import React from "react"
 
 type HoverPreviewProps = {
@@ -8,89 +7,92 @@ type HoverPreviewProps = {
   title?: string
 }
 
-const SPRING = {
-  type: "spring" as const,
-  stiffness: 400,
-  damping: 30,
-}
-
 const HoverPreview = ({ anchorRect, previewUrl, title }: HoverPreviewProps): React.ReactElement | null => {
-  if (!anchorRect || !previewUrl) return null
+  if (!anchorRect) return null
 
   const top = anchorRect.top
   // Match looskie: anchorRect.right + 12
   const left = anchorRect.right + 12
+
+  // withPrefix is idempotent — normalizes for pathPrefix (/portfolio-site) builds
+  // If previewUrl is provided, use it; otherwise show a placeholder pill
   const src = previewUrl ? withPrefix(previewUrl) : null
 
   return (
-    <AnimatePresence>
-      {previewUrl ? (
-        <motion.div
-          key={previewUrl}
-          layoutId="hover-preview"
-          initial={{ opacity: 0, filter: "blur(4px)", x: -4 }}
-          animate={{ opacity: 1, filter: "blur(0px)", x: 0 }}
-          exit={{ opacity: 0, filter: "blur(4px)", x: -4 }}
-          transition={SPRING}
+    <div
+      className="hover-preview"
+      style={{
+        position: "fixed",
+        top,
+        left,
+        width: 320,
+        pointerEvents: "none",
+        zIndex: 40,
+      }}
+    >
+      <div
+        style={{
+          background: "var(--surface)",
+          border: "1px solid var(--border)",
+          borderRadius: 8,
+          overflow: "hidden",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08)",
+        }}
+      >
+        <div
           style={{
-            position: "fixed",
-            top,
-            left,
-            width: 320,
-            pointerEvents: "none",
-            zIndex: 40,
+            width: "100%",
+            aspectRatio: "16 / 10",
+            overflow: "hidden",
+            background: previewUrl ? "var(--background)" : "var(--muted)",
           }}
-          aria-hidden="true"
         >
-          <div
-            style={{
-              background: "var(--surface)",
-              border: "1px solid var(--border)",
-              borderRadius: 8,
-              overflow: "hidden",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08)",
-            }}
-          >
+          {previewUrl ? (
+            <img
+              alt={title ? `Preview of ${title}` : ""}
+              src={src}
+              style={{
+                display: "block",
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+              loading="eager"
+            />
+          ) : (
             <div
               style={{
+                display: "block",
                 width: "100%",
-                aspectRatio: "16 / 10",
-                overflow: "hidden",
-                background: "var(--background)",
-              }}
-            >
-              <img
-                alt={title ? `Preview of ${title}` : ""}
-                src={src ?? previewUrl}
-                style={{
-                  display: "block",
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                }}
-                loading="eager"
-              />
-            </div>
-            {title ? (
-              <div
-                style={{
-                  padding: "10px 12px",
-                  fontSize: 13,
-                  color: "var(--muted)",
-                  borderTop: "1px solid var(--border)",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  background: "var(--surface)",
-                }}
-              >
-                {title}
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "var(--muted)",
+                fontSize: 12,
+              }}>
+                {title ? `Preview of ${title}` : "No preview"}
               </div>
-            ) : null}
+          )}
+        </div>
+        {title ? (
+          <div
+            style={{
+              padding: "10px 12px",
+              fontSize: 13,
+              color: "var(--muted)",
+              borderTop: "1px solid var(--border)",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              background: "var(--surface)",
+            }}
+          >
+            {title}
           </div>
-        </motion.div>
-      ) : null}
-    </AnimatePresence>
+        ) : null}
+      </div>
+    </div>
   )
 }
 

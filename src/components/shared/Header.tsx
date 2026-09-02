@@ -13,10 +13,18 @@ const Header = (): React.ReactElement => {
   const [hoverPos, setHoverPos] = useState<{ left: number; width: number } | null>(null)
   const pathnameRef = useRef(typeof window !== "undefined" ? window.location.pathname : "/")
   const [ready, setReady] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
 
   useLayoutEffect(() => {
     pathnameRef.current = window.location.pathname
   })
+
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 8)
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
 
   const measureActive = useCallback((isInit = false) => {
     const nav = navRef.current
@@ -113,7 +121,7 @@ const Header = (): React.ReactElement => {
   }, [measureActive])
 
   return (
-    <header className="site-header">
+    <header className={`site-header ${isScrolled ? "site-header--scrolled" : ""}`}>
       <div className="header-inner">
         <Link className="site-name" to={routes.home.path}>
           Ejeh Daniel

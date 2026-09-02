@@ -26,6 +26,9 @@ const SEO = ({
       <title>{pageTitle}</title>
       <meta content={description} name="description" />
       <link href={pageURL} rel="canonical" />
+      <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+      <link href="/favicon.svg" rel="icon" media="(prefers-color-scheme: light)" />
+      <link href="/favicon.svg" rel="icon" media="(prefers-color-scheme: dark)" />
       <meta content={pageTitle} property="og:title" />
       <meta content={description} property="og:description" />
       <meta content={pageURL} property="og:url" />

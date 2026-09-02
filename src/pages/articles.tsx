@@ -17,8 +17,9 @@ type WritingPageData = {
         date: string
         readTime: number
         cover?: {
+          publicURL?: string | null
           childImageSharp?: { gatsbyImageData: IGatsbyImageData }
-        }
+        } | null
       }
     }>
   }
@@ -38,8 +39,9 @@ export const query = graphql`
           date(formatString: "MMM D, YYYY")
           readTime
           cover {
+            publicURL
             childImageSharp {
-              gatsbyImageData(layout: CONSTRAINED, width: 240, quality: 88)
+              gatsbyImageData(layout: CONSTRAINED, width: 128, quality: 85)
             }
           }
         }

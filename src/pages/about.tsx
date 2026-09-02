@@ -13,7 +13,7 @@ const AboutPage = (): React.ReactElement => {
           <div className="about-portrait">
             <img
               alt="Ejeh Daniel wearing a burgundy suit outdoors"
-              src={withPrefix("/media/profile.webp")}
+              src={withPrefix("/media/about.webp")}
             />
           </div>
           <nav aria-label="Contact Ejeh Daniel" className="about-socials">
