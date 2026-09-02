@@ -40,24 +40,27 @@ const AboutPage = (): React.ReactElement => {
             it is wasted.
           </p>
           <p>
-            I hope to develop better <span className="accent-word">interactive software</span> that adds more value to
-            people&apos;s lives and creates more immersive experiences that bring them
-            joy. Towards that goal, I am a generalist and care deeply about{" "}
+            I hope to develop better{" "}
+            <span className="accent-word">interactive software</span> that adds more
+            value to people&apos;s lives and creates more immersive experiences that
+            bring them joy. Towards that goal, I am a generalist and care deeply about{" "}
             <span className="accent-word">systems</span>, which form the fundamental
             building blocks of our applications, and{" "}
             <span className="accent-word">interaction design</span>, which shapes how we
             use and live with the computers around us.
           </p>
           <p>
-            Most of my work is in the <span className="accent-word">JavaScript ecosystem</span>, across{" "}
-            <span className="accent-word">frontend, backend</span>, desktop applications,
-            and <span className="accent-word">AI agents</span>, with a deeper
-            specialization in <span className="accent-word">React and TypeScript</span>.
-            I like going deep and really understanding how things work, and I like going
-            broad and thinking about the big picture. Whether you need long-term help
-            forming and executing a technical vision at a strategic level or have
-            something quick that needed to be done yesterday at an operational level, I
-            can help. I&apos;m good at learning and adapting, and I love{" "}
+            Most of my work is in the{" "}
+            <span className="accent-word">JavaScript ecosystem</span>, across{" "}
+            <span className="accent-word">frontend, backend</span>, desktop
+            applications, and <span className="accent-word">AI agents</span>, with a
+            deeper specialization in{" "}
+            <span className="accent-word">React and TypeScript</span>. I like going deep
+            and really understanding how things work, and I like going broad and
+            thinking about the big picture. Whether you need long-term help forming and
+            executing a technical vision at a strategic level or have something quick
+            that needed to be done yesterday at an operational level, I can help.
+            I&apos;m good at learning and adapting, and I love{" "}
             <span className="accent-word">mentoring</span> and being a{" "}
             <span className="accent-word">team enabler</span> just as much as I love
             technical challenges.

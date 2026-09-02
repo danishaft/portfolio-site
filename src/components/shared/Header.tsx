@@ -11,7 +11,9 @@ const Header = (): React.ReactElement => {
   const navRef = useRef<HTMLElement>(null)
   const [indicator, setIndicator] = useState({ left: 0, width: 0, opacity: 0 })
   const [hoverPos, setHoverPos] = useState<{ left: number; width: number } | null>(null)
-  const pathnameRef = useRef(typeof window !== "undefined" ? window.location.pathname : "/")
+  const pathnameRef = useRef(
+    typeof window !== "undefined" ? window.location.pathname : "/"
+  )
   const [ready, setReady] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
 
@@ -31,14 +33,14 @@ const Header = (): React.ReactElement => {
     if (!nav) return
     const currentPathname = pathnameRef.current
     const links = nav.querySelectorAll("a")
-    const activeTab = Array.from(links).find(
-      (link) => {
-        const href = (link as HTMLAnchorElement).getAttribute("href")
-        return href && currentPathname.replace(/\/$/, "") === href.replace(/\/$/, "")
-      }
-    ) as HTMLElement | null
+    const activeTab = Array.from(links).find((link) => {
+      const href = (link as HTMLAnchorElement).getAttribute("href")
+      return href && currentPathname.replace(/\/$/, "") === href.replace(/\/$/, "")
+    }) as HTMLElement | null
     if (!activeTab) {
-      setIndicator(prev => prev.opacity === 0 ? prev : { left: 0, width: 0, opacity: 0 })
+      setIndicator((prev) =>
+        prev.opacity === 0 ? prev : { left: 0, width: 0, opacity: 0 }
+      )
       return
     }
     const rect = activeTab.getBoundingClientRect()
@@ -49,8 +51,9 @@ const Header = (): React.ReactElement => {
       setIndicator({ left: newLeft, width: newWidth, opacity: 1 })
       return
     }
-    setIndicator(prev => {
-      if (prev.left === newLeft && prev.width === newWidth && prev.opacity === 1) return prev
+    setIndicator((prev) => {
+      if (prev.left === newLeft && prev.width === newWidth && prev.opacity === 1)
+        return prev
       return { left: newLeft, width: newWidth, opacity: 1 }
     })
   }, [])
@@ -79,12 +82,10 @@ const Header = (): React.ReactElement => {
       const nav = navRef.current
       if (!nav) return
       const links = nav.querySelectorAll("a")
-      const tab = Array.from(links).find(
-        (l) => {
-          const h = (l as HTMLAnchorElement).getAttribute("href")
-          return h && h.replace(/\/$/, "") === route.path.replace(/\/$/, "")
-        }
-      ) as HTMLElement | null
+      const tab = Array.from(links).find((l) => {
+        const h = (l as HTMLAnchorElement).getAttribute("href")
+        return h && h.replace(/\/$/, "") === route.path.replace(/\/$/, "")
+      }) as HTMLElement | null
       if (!tab) return
       const rect = tab.getBoundingClientRect()
       const navRect = nav.getBoundingClientRect()
