@@ -29,9 +29,11 @@ type FeedSerializeArgs = {
 const gatsbyConfig: GatsbyConfig = {
   siteMetadata,
   pathPrefix:
-    process.env.GATSBY_PATH_PREFIX !== undefined
-      ? process.env.GATSBY_PATH_PREFIX
-      : "/portfolio-site",
+    process.env.VERCEL
+      ? ""
+      : process.env.GATSBY_PATH_PREFIX !== undefined
+        ? process.env.GATSBY_PATH_PREFIX
+        : "/portfolio-site",
 
   flags: {
     // Use DEV_SSR to debug the SSR related issues locally (i.e. hydration related ones).

@@ -1,4 +1,6 @@
-export const siteURL = "https://danishaft.github.io/portfolio-site"
+export const siteURL = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : "https://danishaft.github.io/portfolio-site"
 export const defaultSiteTitle = "Ejeh Daniel"
 export const defaultSiteDescription =
   "Software engineer at Doow building product systems, AI agents, developer tools, and software for music producers."
