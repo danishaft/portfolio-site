@@ -41,10 +41,6 @@ const ResumePage = (): React.ReactElement => {
               •
             </span>
             <a href="https://www.linkedin.com/in/ejeh-daniel-482409190/">LinkedIn</a>
-            <span className="resume-contact-separator" aria-hidden="true">
-              •
-            </span>
-            <span>London, UK</span>
           </address>
         </header>
 
