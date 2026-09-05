@@ -37,7 +37,7 @@ export const projects: Project[] = [
     links: [
       {
         label: "GitHub",
-        url: "https://github.com/danishaft/StemSplitter-Audio-Separation-Server",
+        url: "https://github.com/danishaft/auralith-stemsplitter",
       },
     ],
   },
