@@ -1,8 +1,10 @@
-import { type HeadFC, withPrefix } from "gatsby"
+import { type HeadFC, Link, withPrefix } from "gatsby"
 import React from "react"
 
+import WorkList from "../components/elements/WorkList"
 import PageLayout from "../components/layouts/PageLayout"
 import SEO from "../components/shared/SEO"
+import { routes } from "../constants/routes"
 import { socialLinks } from "../data/socials"
 
 const AboutPage = (): React.ReactElement => {
@@ -34,60 +36,58 @@ const AboutPage = (): React.ReactElement => {
         <article className="about-story">
           <h1>Who am I?</h1>
           <p>
-            I&apos;m a <span className="accent-word">software engineer at Doow</span>,
-            where I build software that helps finance teams understand what their
-            companies spend on software, who is using it, and how to save money before
-            it is wasted.
-          </p>
-          <p>
-            I hope to develop better{" "}
+            Daniel is a software engineer who started out in hardware engineering before
+            finding his way into software. That curiosity about how things work has
+            stayed with him, and today I hope to develop better{" "}
             <span className="accent-word">interactive software</span> that adds more
             value to people&apos;s lives and creates more immersive experiences that
-            bring them joy. Towards that goal, I am a generalist and care deeply about{" "}
+            bring them joy.
+          </p>
+          <p>
+            Towards that goal, I&apos;m a generalist and care deeply about{" "}
             <span className="accent-word">systems</span>, which form the fundamental
             building blocks of our applications, and{" "}
             <span className="accent-word">interaction design</span>, which shapes how we
-            use and live with the computers around us.
+            use and live with computers.
           </p>
           <p>
-            Most of my work is in the{" "}
-            <span className="accent-word">JavaScript ecosystem</span>, across{" "}
-            <span className="accent-word">frontend, backend</span>, desktop
-            applications, and <span className="accent-word">AI agents</span>, with a
-            deeper specialization in{" "}
-            <span className="accent-word">React and TypeScript</span>. I like going deep
-            and really understanding how things work, and I like going broad and
-            thinking about the big picture. Whether you need long-term help forming and
-            executing a technical vision at a strategic level or have something quick
-            that needed to be done yesterday at an operational level, I can help.
-            I&apos;m good at learning and adapting, and I love{" "}
-            <span className="accent-word">mentoring</span> and being a{" "}
+            Currently, I work at <span className="accent-word">Doow</span>, building
+            software for finance and procurement teams alongside AI-powered products.
+            I&apos;ve worked across frontend, backend, desktop applications, and AI,
+            from building AI CFO interfaces and a native spreadsheet engine to browser
+            and desktop usage tracking. Most of my work is in the JavaScript ecosystem,
+            with a deeper specialization in{" "}
+            <span className="accent-word">React and TypeScript</span>.
+          </p>
+          <p>
+            I like going deep and really understanding how things work, while still
+            thinking about the bigger picture. I&apos;m good at learning and adapting,
+            and I love <span className="accent-word">mentoring</span> and being a{" "}
             <span className="accent-word">team enabler</span> just as much as I love
             technical challenges.
           </p>
           <p>
-            Bridging the <span className="accent-word">server-client divide</span>,{" "}
-            <span className="accent-word">performance</span>,{" "}
-            <span className="accent-word">architecture</span>, Node, Next.js, build
-            tooling, testing, frontend DevOps, and building{" "}
-            <span className="accent-word">AI agents</span> and AI solutions into
-            software products to create more business value are some of my strengths. I
-            believe that, for both humans and agents in the era of AI, great{" "}
-            <span className="accent-word">DX is an enabler for great UX</span>. I&apos;m
-            pragmatic, and I thrive on finding simple abstractions for complex problems,
-            whether in web products or AI agents.
+            Outside of work, I build open-source software and experiments around music
+            production, browsers, and developer workflows. Most of them begin as tools I
+            want to use myself.
           </p>
           <p>
-            In my spare time, I work on open-source software and experiments around
-            music production and developer workflows. Most of them begin as tools I want
-            to use myself.
-          </p>
-          <p>
-            I enjoy pretty much anything outdoors, as well as attending meetups and
-            hanging out with family and friends.
+            I enjoy producing beats, making music, pretty much anything outdoors, as
+            well as attending meetups and hanging out with family and friends.
           </p>
         </article>
       </div>
+
+      <section className="about-work" aria-label="Work experience">
+        <header className="editorial-section-header">
+          <h2>Work Experience</h2>
+        </header>
+        <p className="about-work-intro">
+          Feel free to check out my <Link to={routes.resume.path}>resume</Link> for more
+          details on my experience and skills. But for a highlight:
+        </p>
+        <WorkList />
+      </section>
     </PageLayout>
   )
 }

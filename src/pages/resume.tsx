@@ -5,13 +5,36 @@ import { FiDownload, FiLink } from "react-icons/fi"
 
 import PageLayout from "../components/layouts/PageLayout"
 import SEO from "../components/shared/SEO"
-import { featuredProjects } from "../data/projects"
+import { projects } from "../data/projects"
 import { workExperience } from "../data/work"
 
 const ResumePage = (): React.ReactElement => {
   const resumeExperience = workExperience.filter(
-    (experience) => experience.introduction || experience.highlights.length
+    (experience) => experience.highlights.length
   )
+
+  // Project descriptions below are verbatim from the PDF resume; links come
+  // from the single source of truth in src/data/projects.ts.
+  const resumeProjects = [
+    {
+      id: "reaper-mcp",
+      stack: "Python · Lua · MCP · REST",
+      description:
+        "Built a Python-based Model Context Protocol (MCP) server that exposes a 170-operation REST API to REAPER via a Lua bridge, allowing an AI assistant to arrange, mix, and render audio tracks with a one-step undo system.",
+    },
+    {
+      id: "stem-splitter",
+      stack: "React · FastAPI · PostgreSQL · Redis · Modal",
+      description:
+        "Developed a React web app that splits songs into eight isolated tracks. Integrates a FastAPI backend that orchestrates GPU-accelerated separation models on Modal, using Redis/RQ for job queues and PostgreSQL for state.",
+    },
+    {
+      id: "peruz",
+      stack: "TypeScript · Node.js · Chrome Native Messaging · MCP",
+      description:
+        "Built a headless browser automation tool in Node.js connected to a Chrome Extension via Native Messaging. Exposes browser states, network requests, and viewport screenshots to terminal prompts and MCP clients.",
+    },
+  ]
 
   return (
     <PageLayout className="resume-page">
@@ -44,8 +67,31 @@ const ResumePage = (): React.ReactElement => {
           </address>
         </header>
 
+        <section className="resume-section resume-summary">
+          <h2>Professional summary</h2>
+          <p>
+            Hi, I&apos;m Daniel, a Senior Frontend Engineer. I spend most of my time
+            building fast production web apps, custom browser tools, and AI features.
+            I&apos;ve worked as part of founding teams and took products to launch from
+            early MVPs. My stack is React, TypeScript, and Node.js, with a strong focus
+            on testing, maintainable architecture, accessibility, and good UX.
+          </p>
+          <p>
+            At Doow, I&apos;ve built core product features spanning web apps, browser
+            extensions, and desktop agents including our AI CFO interfaces (built a 60
+            FPS spreadsheet from scratch that runs 100k+ cells with a custom formula
+            compiler), and our internal AI review agent that saves the engineering team
+            ~1,000 hours a week.
+          </p>
+          <p>
+            I&apos;m comfortable owning frontend infrastructure, mentoring engineers,
+            and working across product and engineering. Outside of work, I build audio
+            and browser automation tools in Python and Rust.
+          </p>
+        </section>
+
         <section className="resume-section">
-          <h2>Experience</h2>
+          <h2>Professional experience</h2>
           {resumeExperience.map((experience) => (
             <div
               className="resume-entry"
@@ -60,42 +106,45 @@ const ResumePage = (): React.ReactElement => {
                     ) : (
                       experience.company
                     )}
+                    {experience.location ? ` — ${experience.location}` : null}
                   </p>
                 </div>
                 <p>
                   {experience.startDate} – {experience.endDate}
                 </p>
               </div>
-              {experience.introduction ? <p>{experience.introduction}</p> : null}
-              {experience.highlights.length ? (
-                <ul>
-                  {experience.highlights.map((highlight) => (
-                    <li key={highlight}>{highlight}</li>
-                  ))}
-                </ul>
-              ) : null}
+              <ul>
+                {experience.highlights.map((highlight) => (
+                  <li key={highlight}>{highlight}</li>
+                ))}
+              </ul>
             </div>
           ))}
         </section>
-
         <section className="resume-section">
           <h2>Selected projects</h2>
-          {featuredProjects.map((project) => (
-            <div className="resume-project" key={project.id}>
-              <div>
-                <h3>
-                  <a href={project.links[0].url}>
-                    {project.name}
-                    <FiLink aria-hidden="true" />
-                  </a>
-                </h3>
-                <p>{project.stack.join(" · ")}</p>
+          {resumeProjects.map((resumeProject) => {
+            const project = projects.find((p) => p.id === resumeProject.id)
+            return (
+              <div className="resume-project" key={resumeProject.id}>
+                <div>
+                  <h3>
+                    {project ? (
+                      <a href={project.links[0].url}>
+                        {project.name}
+                        <FiLink aria-hidden="true" />
+                      </a>
+                    ) : (
+                      resumeProject.id
+                    )}
+                  </h3>
+                  <p>{resumeProject.stack}</p>
+                </div>
+                <p>{resumeProject.description}</p>
               </div>
-              <p>{project.summary}</p>
-            </div>
-          ))}
+            )
+          })}
         </section>
-
         <section className="resume-section resume-education">
           <h2>Education</h2>
           <div className="resume-entry">
@@ -113,20 +162,23 @@ const ResumePage = (): React.ReactElement => {
         <section className="resume-section resume-skills">
           <h2>Technical skills</h2>
           <p>
-            <strong>Languages:</strong> TypeScript, JavaScript, Python, Rust, Lua, SQL,
-            HTML, CSS
+            <strong>Languages:</strong> TypeScript, JavaScript, Python, Rust, SQL,
+            HTML5, CSS3
           </p>
           <p>
-            <strong>Frontend:</strong> React, Next.js, Tailwind CSS, Radix UI, Shadcn
-            UI, Framer Motion, Storybook
+            <strong>Frontend:</strong> React, Next.js, Vue.js, Vite, Tailwind CSS,
+            Shadcn UI, Radix UI, D3.js, Web Accessibility (WCAG 2.1)
           </p>
           <p>
-            <strong>Backend and data:</strong> Node.js, FastAPI, PostgreSQL, Redis,
-            GraphQL, REST APIs
+            <strong>Backend and data:</strong> Node.js, FastAPI, PostgreSQL, Redis, REST
+            APIs, GraphQL
           </p>
           <p>
-            <strong>Platforms and tools:</strong> Tauri, Playwright, Vitest, pytest,
-            Azure, GitHub Actions, Turborepo, Grafana, Datadog
+            <strong>AI and tooling:</strong> AI SDK, RAG Systems, OpenAI API, LangChain
+          </p>
+          <p>
+            <strong>Tools and DevOps:</strong> Playwright, Vitest, Docker, GitHub
+            Actions, Turborepo, Core Web Vitals
           </p>
         </section>
       </article>

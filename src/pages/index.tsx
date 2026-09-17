@@ -183,27 +183,36 @@ const IndexPage = ({ data }: PageProps<HomePageData>): React.ReactElement => {
 
         <div className="home-bio">
           <p>
-            I&apos;m a <span className="accent-word">software engineer at Doow</span>,
-            working across <span className="accent-word">frontend, backend</span>,
-            desktop applications, and <span className="accent-word">AI agents</span>,
-            with a deeper specialization in{" "}
-            <span className="accent-word">React and TypeScript</span>.
+            I started <span className="accent-word">pulling apart machines</span> from a
+            young age, almost around the same time I started playing with{" "}
+            <span className="accent-word">Lego blocks</span>. Somehow I found the
+            computer, and it&apos;s turned into an interesting career.
           </p>
           <p>
-            I like going deep and really understanding how things work, and I like going
-            broad and thinking about the big picture. I&apos;m good at learning and
-            adapting, and I love <span className="accent-word">mentoring</span> and
-            being a <span className="accent-word">team enabler</span> just as much as I
-            love technical challenges.
+            It&apos;s been an interesting journey. In my previous life, I started out as
+            an <span className="accent-word">engineer building hardware</span>. Now
+            I&apos;m having a blast with computers and software. I&apos;m currently a{" "}
+            <span className="accent-word">software engineer at Doow</span>, building
+            software for finance and procurement teams alongside{" "}
+            <span className="accent-word">AI-powered products</span>.
+          </p>
+          <p>
+            If you&apos;re here on my little space on the internet, then something
+            caught your attention, and you&apos;re most welcome. This is my hub for{" "}
+            <span className="accent-word">writing and thoughtful technical pieces</span>
+            , thinking, <span className="accent-word">solving problems with code</span>,
+            and the <span className="accent-word">interesting and random projects</span>{" "}
+            I get myself into.
+          </p>
+          <p>
+            Take some time to <span className="accent-word">look around</span> before
+            you leave.
           </p>
         </div>
 
         <nav aria-label="Portfolio sections" className="home-destinations">
           <Link to={routes.about.path}>
             About <FiArrowUpRight aria-hidden="true" />
-          </Link>
-          <Link to={routes.work.path}>
-            Work <FiArrowUpRight aria-hidden="true" />
           </Link>
           <Link to={routes.projects.path}>
             Projects <FiArrowUpRight aria-hidden="true" />

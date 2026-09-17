@@ -7,7 +7,6 @@ export type Route = {
 export const routes = {
   home: { path: "/", name: "Home" },
   about: { path: "/about", name: "About" },
-  work: { path: "/work", name: "Work" },
   projects: { path: "/projects", name: "Projects" },
   sound: { enabled: false, path: "/sound", name: "Sound" },
   writing: { path: "/articles", name: "Writing" },
@@ -16,7 +15,6 @@ export const routes = {
 } satisfies Record<string, Route>
 
 export const TOP_NAV: Route[] = [
-  routes.work,
   routes.projects,
   routes.writing,
   routes.about,
